@@ -10,6 +10,7 @@ import { BoosterPackModal } from './components/BoosterPackModal';
 import { ZipUploaderModal } from './components/ZipUploaderModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { MobileFilterDrawer } from './components/MobileFilterDrawer';
+import { QuestsModal } from './components/QuestsModal';
 import { sound } from './utils/audio';
 import { SearchX } from 'lucide-react';
 
@@ -66,6 +67,7 @@ export function App() {
   const [isBoosterOpen, setIsBoosterOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [isQuestsOpen, setIsQuestsOpen] = useState(false);
 
   // Save to localStorage when owned or favorite sets change
   useEffect(() => {
@@ -298,6 +300,7 @@ export function App() {
         activeFilter={ownershipFilter}
         onFilterChange={setOwnershipFilter}
         onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
+        onOpenQuests={() => setIsQuestsOpen(true)}
       />
 
       {/* Main Container with safe bottom padding for floating mobile dock */}
@@ -309,6 +312,7 @@ export function App() {
           onRandomCard={handleRandomCard}
           onMarkAllOwned={handleMarkAllOwned}
           onResetOwned={handleResetOwned}
+          onOpenQuests={() => setIsQuestsOpen(true)}
         />
 
         {/* Filter & Sorting Controls */}
@@ -382,6 +386,7 @@ export function App() {
         onFilterChange={setOwnershipFilter}
         onOpenBooster={() => setIsBoosterOpen(true)}
         onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
+        onOpenQuests={() => setIsQuestsOpen(true)}
         hasActiveFilters={hasActiveFilters}
       />
 
@@ -452,6 +457,22 @@ export function App() {
         <ZipUploaderModal
           onClose={() => setIsUploadOpen(false)}
           onApplyNewCards={handleApplyNewCards}
+        />
+      )}
+
+      {/* Goat Quests & IRL Challenges Hub */}
+      {isQuestsOpen && (
+        <QuestsModal
+          allCards={cards}
+          ownedCardIds={ownedCardIds}
+          onClose={() => setIsQuestsOpen(false)}
+          onClaimCard={(cardId) => {
+            handleToggleOwned(cardId);
+          }}
+          onInspectCard={(c) => {
+            setIsQuestsOpen(false);
+            setInspectedCard(c);
+          }}
         />
       )}
 

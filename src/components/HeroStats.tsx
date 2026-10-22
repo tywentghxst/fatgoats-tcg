@@ -19,6 +19,7 @@ interface HeroStatsProps {
   onRandomCard: () => void;
   onMarkAllOwned: () => void;
   onResetOwned: () => void;
+  onOpenQuests?: () => void;
 }
 
 export const HeroStats: React.FC<HeroStatsProps> = ({
@@ -26,6 +27,7 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
   onRandomCard,
   onMarkAllOwned,
   onResetOwned,
+  onOpenQuests,
 }) => {
   const [mobileExpanded, setMobileExpanded] = useState(false);
 
@@ -98,6 +100,16 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-1 sm:pt-2">
+                {onOpenQuests && (
+                  <button
+                    onClick={onOpenQuests}
+                    className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/25 active:scale-95 transition-all"
+                  >
+                    <span>🎯</span>
+                    <span>IRL Quests to Unlock</span>
+                  </button>
+                )}
+
                 <button
                   onClick={() => {
                     sound.playCardFlip();

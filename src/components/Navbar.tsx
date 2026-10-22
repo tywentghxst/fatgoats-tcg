@@ -22,6 +22,7 @@ interface NavbarProps {
   activeFilter: 'all' | 'owned' | 'unowned' | 'favorite';
   onFilterChange: (f: 'all' | 'owned' | 'unowned' | 'favorite') => void;
   onOpenMobileFilters?: () => void;
+  onOpenQuests?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -35,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeFilter,
   onFilterChange,
   onOpenMobileFilters,
+  onOpenQuests,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#060a12]/90 border-b border-cyan-900/30 transition-all">
@@ -136,6 +138,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               ({stats.favoriteCount})
             </button>
           </div>
+
+          {/* Quests / IRL Challenges Button */}
+          {onOpenQuests && (
+            <button
+              onClick={onOpenQuests}
+              title="Goat Quests & IRL Challenges"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-amber-950/70 border border-amber-500/40 text-amber-300 hover:bg-amber-900/60 active:scale-95 transition-all shadow-sm"
+            >
+              <span className="text-sm">🎯</span>
+              <span className="hidden sm:inline">IRL Quests</span>
+            </button>
+          )}
 
           {/* Desktop Booster Button */}
           <button

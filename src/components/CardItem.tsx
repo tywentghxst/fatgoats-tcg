@@ -27,16 +27,21 @@ export const CardItem: React.FC<CardItemProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Framer Motion 3D Tilt Values
+  // Mouse / Touch offset coordinates: -0.5 to 0.5
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const springConfig = { damping: 20, stiffness: 300, mass: 0.5 };
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [16, -16]), springConfig);
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-16, 16]), springConfig);
-  const glareOpacity = useSpring(useTransform(y, [-0.5, 0.5], [0.1, 0.45]), springConfig);
+  // Snappy, realistic spring physics for 3D tilt
+  const springConfig = { damping: 16, stiffness: 220, mass: 0.1 };
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [18, -18]), springConfig);
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-18, 18]), springConfig);
+  const glareOpacity = useSpring(useTransform(y, [-0.5, 0.5], [0.15, 0.55]), springConfig);
 
-  // Mouse tilt
+  // Glare position following cursor
+  const glareX = useTransform(x, [-0.5, 0.5], ['10%', '90%']);
+  const glareY = useTransform(y, [-0.5, 0.5], ['10%', '90%']);
+
+  // Mouse tilt handlers
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -46,7 +51,18 @@ export const CardItem: React.FC<CardItemProps> = ({
     y.set(yPct);
   };
 
-  // Touch tilt for mobile devices!
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    sound.playCardHover();
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    x.set(0);
+    y.set(0);
+  };
+
+  // Touch tilt handlers for mobile
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!cardRef.current || e.touches.length === 0) return;
     const touch = e.touches[0];
@@ -64,52 +80,41 @@ export const CardItem: React.FC<CardItemProps> = ({
     y.set(0);
   };
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-    sound.playCardHover();
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    x.set(0);
-    y.set(0);
-  };
-
   // Color mappings for rarities
   const rarityColors: Record<string, { border: string; glow: string; text: string; bg: string }> = {
     'Mythic Rare': {
       border: 'border-pink-500/80',
-      glow: 'shadow-[0_0_20px_rgba(236,72,153,0.3)]',
+      glow: 'shadow-[0_0_24px_rgba(236,72,153,0.4)]',
       text: 'text-pink-300',
       bg: 'bg-pink-950/80',
     },
     'Secret Rare': {
       border: 'border-purple-400/90',
-      glow: 'shadow-[0_0_25px_rgba(168,85,247,0.4)]',
+      glow: 'shadow-[0_0_28px_rgba(168,85,247,0.45)]',
       text: 'text-purple-200',
       bg: 'bg-purple-950/80',
     },
     'Legendary': {
       border: 'border-amber-400/80',
-      glow: 'shadow-[0_0_20px_rgba(245,158,11,0.3)]',
+      glow: 'shadow-[0_0_24px_rgba(245,158,11,0.4)]',
       text: 'text-amber-300',
       bg: 'bg-amber-950/80',
     },
     'Ultra Rare': {
       border: 'border-violet-500/70',
-      glow: 'shadow-[0_0_18px_rgba(139,92,246,0.25)]',
+      glow: 'shadow-[0_0_20px_rgba(139,92,246,0.35)]',
       text: 'text-violet-300',
       bg: 'bg-violet-950/80',
     },
     'Rare': {
       border: 'border-cyan-500/60',
-      glow: 'shadow-[0_0_18px_rgba(6,182,212,0.25)]',
+      glow: 'shadow-[0_0_20px_rgba(6,182,212,0.35)]',
       text: 'text-cyan-300',
       bg: 'bg-cyan-950/80',
     },
     'Common': {
       border: 'border-slate-600/50',
-      glow: 'shadow-[0_0_12px_rgba(148,163,184,0.15)]',
+      glow: 'shadow-[0_0_12px_rgba(148,163,184,0.2)]',
       text: 'text-slate-300',
       bg: 'bg-slate-900/80',
     },
@@ -118,7 +123,11 @@ export const CardItem: React.FC<CardItemProps> = ({
   const currentRarity = rarityColors[card.rarity] || rarityColors['Rare'];
 
   return (
-    <div className="relative group perspective-1000 select-none">
+    <div 
+      className="relative group select-none"
+      style={{ perspective: 1000 }}
+    >
+      {/* 3D Tilting Card Element - NO overflow-hidden here so 3D isn't flattened! */}
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -135,17 +144,19 @@ export const CardItem: React.FC<CardItemProps> = ({
           rotateY,
           transformStyle: 'preserve-3d',
         }}
-        whileHover={{ scale: 1.03, zIndex: 20 }}
-        whileTap={{ scale: 0.97 }}
-        className={`relative cursor-pointer rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 ${
+        whileHover={{ scale: 1.04, zIndex: 30 }}
+        whileTap={{ scale: 0.98 }}
+        className={`relative cursor-pointer rounded-xl sm:rounded-2xl ${
           isOwned ? '' : 'opacity-80 grayscale-[25%]'
-        } ${isHovered ? currentRarity.glow : 'shadow-lg sm:shadow-xl shadow-black/60'} ${
+        } ${isHovered ? currentRarity.glow : 'shadow-lg sm:shadow-xl shadow-black/70'} ${
           currentRarity.border
         } border bg-[#09101d]`}
       >
-        {/* Card Artwork Image Container */}
-        <div className="relative aspect-[731/1024] w-full overflow-hidden bg-slate-950 flex items-center justify-center">
-          
+        {/* Inner Card Container with overflow-hidden for rounded artwork */}
+        <div 
+          className="relative aspect-[731/1024] w-full overflow-hidden rounded-[10px] sm:rounded-[14px] bg-slate-950 flex items-center justify-center"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
           {/* Skeleton placeholder while loading */}
           {!imageLoaded && (
             <div className="absolute inset-0 bg-slate-900 animate-pulse flex items-center justify-center">
@@ -153,6 +164,7 @@ export const CardItem: React.FC<CardItemProps> = ({
             </div>
           )}
 
+          {/* Card Artwork */}
           <img
             src={card.thumbUrl || card.imageUrl}
             alt={card.title}
@@ -161,16 +173,17 @@ export const CardItem: React.FC<CardItemProps> = ({
             onError={(e) => {
               (e.target as HTMLImageElement).src = card.imageUrl;
             }}
-            className={`w-full h-full object-cover transition-opacity duration-300 ${
+            className={`w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300 ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             }`}
           />
 
-          {/* Holographic Iridescent Foil Overlay */}
+          {/* Dynamic Holographic Foil Overlay */}
           <motion.div
-            className="absolute inset-0 holo-foil pointer-events-none transition-opacity duration-300"
+            className="absolute inset-0 holo-foil pointer-events-none"
             style={{
               opacity: isHovered ? glareOpacity : 0.08,
+              backgroundPosition: `${glareX} ${glareY}`,
             }}
           />
 
@@ -178,15 +191,18 @@ export const CardItem: React.FC<CardItemProps> = ({
           {(card.rarity === 'Mythic Rare' || card.rarity === 'Secret Rare') && (
             <div 
               className={`absolute inset-0 holo-secret pointer-events-none transition-opacity duration-300 ${
-                isHovered ? 'opacity-80' : 'opacity-15'
+                isHovered ? 'opacity-85' : 'opacity-15'
               }`}
             />
           )}
 
           {/* Top Floating Badges */}
-          <div className="absolute top-1.5 sm:top-2.5 left-1.5 sm:left-2.5 right-1.5 sm:right-2.5 flex items-center justify-between pointer-events-none z-10">
+          <div 
+            className="absolute top-1.5 sm:top-2.5 left-1.5 sm:left-2.5 right-1.5 sm:right-2.5 flex items-center justify-between pointer-events-none z-10"
+            style={{ transform: 'translateZ(15px)' }}
+          >
             {/* Card Number Badge */}
-            <span className="px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg bg-black/80 backdrop-blur-md border border-white/10 text-white font-mono text-[10px] sm:text-[11px] font-bold tracking-wider shadow-md">
+            <span className="px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg bg-black/85 backdrop-blur-md border border-white/10 text-white font-mono text-[10px] sm:text-[11px] font-bold tracking-wider shadow-md">
               #{card.cardNumber}
             </span>
 
@@ -234,7 +250,10 @@ export const CardItem: React.FC<CardItemProps> = ({
           </div>
 
           {/* Bottom Card Title Banner */}
-          <div className="absolute bottom-0 inset-x-0 p-2 sm:p-3 bg-gradient-to-t from-slate-950 via-slate-950/85 to-transparent pointer-events-none z-10">
+          <div 
+            className="absolute bottom-0 inset-x-0 p-2 sm:p-3 bg-gradient-to-t from-slate-950 via-slate-950/85 to-transparent pointer-events-none z-10"
+            style={{ transform: 'translateZ(12px)' }}
+          >
             <div className="flex items-center justify-between gap-1 mb-0.5 sm:mb-1">
               <span className={`text-[9px] sm:text-[10px] uppercase font-bold tracking-wider px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded ${currentRarity.bg} ${currentRarity.text} border border-white/10 truncate`}>
                 {card.rarity}

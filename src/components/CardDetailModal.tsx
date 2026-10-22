@@ -16,10 +16,13 @@ import {
   Gauge, 
   Compass,
   Smartphone,
-  BookOpen
+  BookOpen,
+  Target
 } from 'lucide-react';
 import { CardItem as CardItemType } from '../types';
+import { FAT_GOATS_QUESTS } from '../data/questsData';
 import { sound } from '../utils/audio';
+import confetti from 'canvas-confetti';
 
 interface CardDetailModalProps {
   card: CardItemType | null;
@@ -57,9 +60,10 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const springConfig = { damping: 24, stiffness: 280, mass: 0.5 };
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [20, -20]), springConfig);
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-20, 20]), springConfig);
+  // Snappy spring config for cursor/gyro parallax tilt
+  const springConfig = { damping: 20, stiffness: 240, mass: 0.1 };
+  const tiltRotateX = useSpring(useTransform(y, [-0.5, 0.5], [16, -16]), springConfig);
+  const tiltRotateY = useSpring(useTransform(x, [-0.5, 0.5], [-16, 16]), springConfig);
   const glareOpacity = useSpring(useTransform(y, [-0.5, 0.5], [0.15, 0.65]), springConfig);
 
   // Mouse Tilt Handler
@@ -97,8 +101,6 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   useEffect(() => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
       if (event.gamma !== null && event.beta !== null) {
-        // gamma is left-to-right tilt in degrees [-90, 90]
-        // beta is front-to-back tilt in degrees [-180, 180]
         const gammaClamped = Math.max(-30, Math.min(30, event.gamma)) / 30;
         const betaClamped = Math.max(-30, Math.min(30, event.beta - 45)) / 30;
         x.set(gammaClamped * 0.5);
@@ -137,10 +139,15 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
   const toggleFlip = () => {
     sound.playCardFlip();
-    setIsFlipped(!isFlipped);
+    setIsFlipped((prev) => !prev);
   };
 
   if (!card) return null;
+
+  // Find quest associated with this card
+  const cardQuest = FAT_GOATS_QUESTS.find(
+    (q) => q.cardId === card.id || q.cardNumber === card.cardNumber
+  );
 
   return (
     <AnimatePresence>
@@ -254,71 +261,81 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
                 onClick={toggleFlip}
-                className="perspective-1500 w-full max-w-[280px] sm:max-w-[340px] aspect-[731/1024] cursor-pointer group relative touch-none"
+                style={{ perspective: 1200 }}
+                className="w-full max-w-[280px] sm:max-w-[340px] aspect-[731/1024] cursor-pointer group relative touch-none select-none"
                 title="Tap or click to flip card"
               >
+                {/* TIER 1: Tilt Container (Handles Cursor & Gyroscope 3D Parallax Tilt) */}
                 <motion.div
                   style={{
-                    rotateX,
-                    rotateY,
+                    rotateX: tiltRotateX,
+                    rotateY: tiltRotateY,
                     transformStyle: 'preserve-3d',
-                  }}
-                  animate={{
-                    rotateY: isFlipped ? 180 : 0,
-                  }}
-                  transition={{
-                    type: 'spring',
-                    stiffness: 260,
-                    damping: 24,
                   }}
                   className="w-full h-full relative transform-style-3d shadow-2xl rounded-2xl"
                 >
-                  {/* FRONT SIDE */}
-                  <div 
-                    className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden border-2 border-cyan-500/50 bg-[#09101d] shadow-2xl shadow-cyan-950/60"
+                  {/* TIER 2: Flip Container (Independently handles 0° to 180° flip state, never overwritten by mouse movement!) */}
+                  <motion.div
+                    animate={{
+                      rotateY: isFlipped ? 180 : 0,
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 220,
+                      damping: 22,
+                    }}
+                    style={{
+                      transformStyle: 'preserve-3d',
+                    }}
+                    className="w-full h-full relative transform-style-3d"
                   >
-                    <img
-                      src={card.imageUrl}
-                      alt={card.title}
-                      className="w-full h-full object-cover select-none"
-                    />
+                    {/* FRONT SIDE */}
+                    <div 
+                      className="absolute inset-0 backface-hidden rounded-2xl overflow-hidden border-2 border-cyan-500/50 bg-[#09101d] shadow-2xl shadow-cyan-950/60"
+                    >
+                      <img
+                        src={card.imageUrl}
+                        alt={card.title}
+                        className="w-full h-full object-cover select-none pointer-events-none"
+                      />
 
-                    {/* Front Specular / Foil Glare */}
-                    <motion.div
-                      className="absolute inset-0 holo-foil pointer-events-none"
-                      style={{ opacity: glareOpacity }}
-                    />
-                  </div>
-
-                  {/* BACK SIDE (Celestial Goat Card Back) */}
-                  <div
-                    className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden border-2 border-amber-500/50 bg-[#09101d] shadow-2xl shadow-amber-950/60"
-                  >
-                    <img
-                      src={cardBackUrl || '/cards/00 - Celestial Goat Card Back.png'}
-                      alt="00 - Celestial Goat Card Back"
-                      className="w-full h-full object-cover select-none"
-                    />
-
-                    {/* Back Specular Glare */}
-                    <motion.div
-                      className="absolute inset-0 holo-foil pointer-events-none opacity-40"
-                    />
-
-                    {/* Back watermark pill */}
-                    <div className="absolute bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-4 text-center">
-                      <span className="px-2.5 py-0.5 rounded-full bg-black/75 backdrop-blur-md border border-amber-400/30 text-amber-300 font-mono text-[9px] sm:text-[10px] uppercase tracking-widest">
-                        Official Celestial Back
-                      </span>
+                      {/* Front Specular / Foil Glare */}
+                      <motion.div
+                        className="absolute inset-0 holo-foil pointer-events-none"
+                        style={{ opacity: glareOpacity }}
+                      />
                     </div>
-                  </div>
+
+                    {/* BACK SIDE (Celestial Goat Card Back) */}
+                    <div
+                      className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden border-2 border-amber-500/50 bg-[#09101d] shadow-2xl shadow-amber-950/60"
+                    >
+                      <img
+                        src={cardBackUrl || '/cards/00 - Celestial Goat Card Back.png'}
+                        alt="00 - Celestial Goat Card Back"
+                        className="w-full h-full object-cover select-none pointer-events-none"
+                      />
+
+                      {/* Back Specular Glare */}
+                      <motion.div
+                        className="absolute inset-0 holo-foil pointer-events-none opacity-40"
+                      />
+
+                      {/* Back watermark pill */}
+                      <div className="absolute bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-4 text-center pointer-events-none">
+                        <span className="px-2.5 py-0.5 rounded-full bg-black/85 backdrop-blur-md border border-amber-400/40 text-amber-300 font-mono text-[9px] sm:text-[10px] uppercase tracking-widest shadow-lg">
+                          Official Celestial Back
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
                 </motion.div>
               </div>
 
               {/* Interaction Hint Pill */}
               <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] sm:text-xs text-slate-400 text-center">
                 <RotateCw className="w-3.5 h-3.5 text-cyan-400 animate-spin" style={{ animationDuration: '8s' }} />
-                <span>Tap card to flip • Tilt phone to reflect holo foil</span>
+                <span>Click card to flip • Tilt cursor/phone to view in 3D</span>
               </div>
 
               {/* Mobile Quick Action Buttons right below card */}
@@ -360,8 +377,8 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
             </div>
 
-            {/* Right Column: Card Lore & Combat Stats */}
-            <div className={`lg:col-span-7 space-y-3 sm:space-y-5 ${mobileTab === 'card' ? 'hidden sm:block' : 'block'}`}>
+            {/* Right Column: Card Lore, IRL Quest Challenge, & Combat Stats */}
+            <div className={`lg:col-span-7 space-y-3 sm:space-y-4 ${mobileTab === 'card' ? 'hidden sm:block' : 'block'}`}>
               
               {/* Badges Bar */}
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -388,6 +405,47 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                   Art: <strong className="text-slate-300">{card.fileName}</strong>
                 </p>
               </div>
+
+              {/* 🎯 IRL Quest Challenge Box */}
+              {cardQuest && (
+                <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-amber-950/70 border border-amber-500/40 shadow-lg">
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300 uppercase tracking-wider">
+                      <Target className="w-4 h-4 text-amber-400" />
+                      <span>IRL Challenge: {cardQuest.title}</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-cyan-300 bg-black/60 px-2 py-0.5 rounded-full border border-cyan-500/30">
+                      +{cardQuest.xpReward} XP
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-100 font-medium mb-2 leading-relaxed">
+                    "{cardQuest.instruction}"
+                  </p>
+                  {!isOwned ? (
+                    <button
+                      onClick={() => {
+                        sound.playSparkle();
+                        confetti({
+                          particleCount: 100,
+                          spread: 70,
+                          origin: { y: 0.6 },
+                          colors: ['#38bdf8', '#f59e0b', '#ec4899', '#10b981'],
+                        });
+                        onToggleOwned(card.id);
+                      }}
+                      className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 active:scale-95 transition"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>I Did It! Claim Card to Binder</span>
+                    </button>
+                  ) : (
+                    <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-semibold">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Quest Completed! Card unlocked in your binder.</span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Flavor Text Callout Box */}
               <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-900/90 to-[#0c1626]/90 border border-cyan-500/20 italic text-slate-300 text-xs sm:text-sm leading-relaxed">
@@ -476,7 +534,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                 </div>
               </div>
 
-              {/* Bottom Management Controls (Desktop & Mobile) */}
+              {/* Bottom Management Controls */}
               <div className="pt-2 flex flex-wrap items-center justify-between gap-2 sm:gap-3 border-t border-slate-800">
                 
                 {/* Owned Toggle */}
