@@ -295,7 +295,7 @@ export function App() {
     searchQuery.trim() !== '';
 
   return (
-    <div className="min-h-screen bg-[#060a12] text-slate-100 flex flex-col bg-celestial-gradient">
+    <div className="min-h-screen bg-[#060a12] text-slate-100 flex flex-col bg-celestial-gradient overflow-x-hidden w-full max-w-[100vw]">
       
       {/* Top Navigation */}
       <Navbar

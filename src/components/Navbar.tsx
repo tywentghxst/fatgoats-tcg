@@ -99,10 +99,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Action Controls & Quick Stats */}
-        <div className="flex items-center gap-1.5 sm:gap-3">
+        <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
           
-          {/* Mobile Completion Badge (Header) */}
-          <div className="md:hidden flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
+          {/* Mobile Completion Badge (Header - compact) */}
+          <div className="hidden sm:flex md:hidden items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
             <Sparkles className="w-3 h-3 text-cyan-400 animate-spin" style={{ animationDuration: '6s' }} />
             <span>{stats.completionRate}%</span>
           </div>
@@ -161,7 +161,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenNewReveal}
               title="Summoning Shrine - Reveal newly added cards!"
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white shadow-lg shadow-amber-500/25 active:scale-95 transition-all hover:brightness-110 animate-pulse"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-bold bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white shadow-lg shadow-amber-500/25 active:scale-95 transition-all hover:brightness-110 animate-pulse"
             >
               <Sparkles className="w-3.5 h-3.5 fill-current" />
               <span className="hidden sm:inline">New Drops</span>
@@ -171,15 +171,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Quests / IRL Challenges Button */}
+          {/* Quests / IRL Challenges Button (Desktop only; on mobile it's in bottom dock) */}
           {onOpenQuests && (
             <button
               onClick={onOpenQuests}
               title="Goat Quests & IRL Challenges"
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-amber-950/70 border border-amber-500/40 text-amber-300 hover:bg-amber-900/60 active:scale-95 transition-all shadow-sm"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-amber-950/70 border border-amber-500/40 text-amber-300 hover:bg-amber-900/60 active:scale-95 transition-all shadow-sm"
             >
               <span className="text-sm">🎯</span>
-              <span className="hidden sm:inline">IRL Quests</span>
+              <span>IRL Quests</span>
             </button>
           )}
 
@@ -198,17 +198,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenMobileFilters}
               title="Search and filter cards"
-              className="md:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-400 transition-all active:scale-90"
+              className="md:hidden p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-400 transition-all active:scale-90"
             >
               <Search className="w-4 h-4" />
             </button>
           )}
 
-          {/* ZIP Archive Upload Button */}
+          {/* ZIP Archive Upload Button (Desktop only on mobile use drawer) */}
           <button
             onClick={onOpenUpload}
             title="Import or replace cards from custom ZIP archive"
-            className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl text-xs font-medium bg-slate-900 border border-slate-700 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition-all active:scale-95"
+            className="hidden sm:flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl text-xs font-medium bg-slate-900 border border-slate-700 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition-all active:scale-95"
           >
             <Upload className="w-4 h-4 text-cyan-400" />
             <span className="hidden md:inline">Load ZIP</span>
@@ -218,7 +218,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onToggleSound}
             title={soundEnabled ? "Mute Game Audio" : "Unmute Game Audio"}
-            className={`p-2 sm:p-2.5 rounded-xl border transition-all active:scale-90 ${
+            className={`p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl border transition-all active:scale-90 ${
               soundEnabled
                 ? 'bg-cyan-950/60 border-cyan-500/40 text-cyan-300 shadow-sm shadow-cyan-500/20'
                 : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'

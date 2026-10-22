@@ -76,12 +76,52 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
           </div>
 
           {/* Mobile Quick Progress Bar (Always Visible on Mobile) */}
-          <div className="sm:hidden mb-3">
+          <div className="sm:hidden mb-2.5">
             <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
               <div 
                 className="bg-gradient-to-r from-cyan-500 to-amber-400 h-full rounded-full transition-all duration-500"
                 style={{ width: `${stats.completionRate}%` }}
               />
+            </div>
+          </div>
+
+          {/* Mobile Action Banner (Instant Access to New Drops & Quests) */}
+          <div className="sm:hidden space-y-2 mb-3">
+            {onOpenNewReveal && newCardsCount > 0 && (
+              <button
+                onClick={onOpenNewReveal}
+                className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white font-display font-black text-xs flex items-center justify-between shadow-lg shadow-amber-500/30 active:scale-95 transition-all animate-pulse"
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 fill-current text-amber-200" />
+                  <span>{newCardsCount} New Cards Just Dropped!</span>
+                </div>
+                <span className="bg-black/35 px-2 py-0.5 rounded-md text-[10px] font-mono uppercase tracking-wider">
+                  Summon →
+                </span>
+              </button>
+            )}
+
+            <div className="flex items-center gap-2">
+              {onOpenQuests && (
+                <button
+                  onClick={onOpenQuests}
+                  className="flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-amber-950/70 border border-amber-500/40 text-amber-300 flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                >
+                  <span>🎯</span>
+                  <span>Goat Quests</span>
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  sound.playCardFlip();
+                  onRandomCard();
+                }}
+                className="flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+              >
+                <Shuffle className="w-3.5 h-3.5" />
+                <span>Random</span>
+              </button>
             </div>
           </div>
 
