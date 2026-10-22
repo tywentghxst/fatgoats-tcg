@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Heart, CheckCircle2, Circle, Sparkles, Eye } from 'lucide-react';
+import { Heart, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import { CardItem as CardItemType } from '../types';
 import { sound } from '../utils/audio';
 
@@ -250,15 +250,6 @@ export const CardItem: React.FC<CardItemProps> = ({
               {card.subtitle}
             </p>
           </div>
-
-          {/* Centered Inspect 3D prompt on hover (Desktop) */}
-          <div className="hidden sm:flex absolute inset-0 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20">
-            <span className="px-3 py-1.5 rounded-xl bg-cyan-950/90 border border-cyan-400 text-cyan-200 text-xs font-semibold backdrop-blur-md shadow-xl flex items-center gap-1.5">
-              <Eye className="w-3.5 h-3.5 text-cyan-400" />
-              Inspect 3D Card
-            </span>
-          </div>
-
         </div>
 
       </motion.div>
