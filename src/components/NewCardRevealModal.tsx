@@ -17,7 +17,8 @@ import {
   Layers,
   MessageSquareQuote,
   FastForward,
-  BookOpen
+  BookOpen,
+  ScrollText
 } from 'lucide-react';
 import { CardItem as CardItemType } from '../types';
 import { sound } from '../utils/audio';
@@ -42,7 +43,8 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
   const [isCharging, setIsCharging] = useState(false);
   const [showFlash, setShowFlash] = useState(false);
   const [isFlippedManual, setIsFlippedManual] = useState(false);
-  const [showLore, setShowLore] = useState(false);
+  const [showMobileLore, setShowMobileLore] = useState(false);
+  const [showLoreDetails, setShowLoreDetails] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
   // Animated stat counters
@@ -70,7 +72,8 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
     setIsFlippedManual(false);
     setIsCharging(false);
     setShowFlash(false);
-    setShowLore(false);
+    setShowMobileLore(false);
+    setShowLoreDetails(false);
 
     if (currentCard && revealedIndices.has(currentIndex)) {
       setDisplayHp(currentCard.hp);
@@ -219,7 +222,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
   if (!currentCard) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-6 overflow-y-auto overflow-x-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 overflow-y-auto overflow-x-hidden">
       {/* Deep cosmic backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -255,28 +258,25 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 15 }}
         transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-        className="relative z-10 w-full max-w-[94vw] sm:max-w-2xl md:max-w-4xl bg-slate-900/95 border border-amber-500/35 rounded-2xl sm:rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.25)] p-3.5 sm:p-7 flex flex-col my-auto max-h-[92vh] overflow-y-auto overflow-x-hidden"
+        className="relative z-10 w-full max-w-[95vw] sm:max-w-xl md:max-w-4xl bg-slate-900/95 border border-amber-500/35 rounded-2xl sm:rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.25)] p-3 sm:p-6 flex flex-col my-auto max-h-[96vh] overflow-hidden"
       >
         {/* Header Bar */}
-        <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5 sm:pb-3.5 mb-3 sm:mb-4 shrink-0">
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            <span className="p-1.5 sm:p-2 rounded-xl bg-gradient-to-br from-amber-500/25 to-cyan-500/25 border border-amber-400/40 text-amber-300">
-              <Sparkles className="w-4 sm:w-5 h-4 sm:w-5 fill-current animate-spin" style={{ animationDuration: '8s' }} />
+        <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 sm:pb-3 mb-2.5 sm:mb-4 shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="p-1 sm:p-1.5 rounded-xl bg-gradient-to-br from-amber-500/25 to-cyan-500/25 border border-amber-400/40 text-amber-300">
+              <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 fill-current animate-spin" style={{ animationDuration: '8s' }} />
             </span>
             <div>
-              <h2 className="font-display font-black text-xs sm:text-base md:text-lg text-white tracking-wide flex items-center gap-1.5 sm:gap-2">
-                CELESTIAL SUMMONING SHRINE
-                <span className="bg-amber-400/20 border border-amber-400/50 text-amber-300 text-[9px] sm:text-[10px] font-mono px-1.5 sm:px-2 py-0.2 rounded-full uppercase">
-                  Series Drop
+              <h2 className="font-display font-black text-xs sm:text-base md:text-lg text-white tracking-wide flex items-center gap-1.5">
+                CELESTIAL SUMMONING
+                <span className="bg-amber-400/20 border border-amber-400/50 text-amber-300 text-[9px] sm:text-[10px] font-mono px-1.5 py-0.2 rounded-full uppercase">
+                  New Drops
                 </span>
               </h2>
-              <p className="text-[10px] sm:text-xs text-slate-400 truncate max-w-[200px] sm:max-w-md">
-                Unveil newly materialized cards entering the FatGoats universe.
-              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-1.5">
             {!isComplete && (
               <button
                 onClick={handleRevealAll}
@@ -290,7 +290,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition active:scale-90"
+              className="p-1 sm:p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition active:scale-90"
             >
               <X className="w-4 sm:w-5 h-4 sm:h-5" />
             </button>
@@ -299,10 +299,10 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
 
         {/* ACTIVE STAGE: Unveil Ritual */}
         {!isComplete ? (
-          <div className="flex flex-col flex-1">
+          <div className="flex flex-col flex-1 overflow-y-auto">
             {/* Celestial Jewel Beacons (Step Progress) */}
-            <div className="flex items-center justify-between mb-3 sm:mb-5 px-1 shrink-0">
-              <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-1 max-w-[70%]">
+            <div className="flex items-center justify-between mb-2 sm:mb-4 px-1 shrink-0">
+              <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto py-0.5 max-w-[70%]">
                 {newCards.map((c, i) => {
                   const isRev = revealedIndices.has(i);
                   const isCurrent = i === currentIndex;
@@ -315,14 +315,14 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                       }}
                       className={`relative flex items-center justify-center rounded-full transition-all duration-300 ${
                         isCurrent
-                          ? 'w-7 sm:w-8 h-7 sm:h-8 bg-gradient-to-tr from-amber-400 to-amber-300 text-slate-950 font-black text-[11px] shadow-lg shadow-amber-400/50 scale-105'
+                          ? 'w-6 sm:w-7 h-6 sm:h-7 bg-gradient-to-tr from-amber-400 to-amber-300 text-slate-950 font-black text-[10px] shadow-lg shadow-amber-400/50 scale-105'
                           : isRev
-                          ? 'w-6 sm:w-7 h-6 sm:h-7 bg-emerald-500/30 border border-emerald-400/60 text-emerald-300 font-bold text-[10px]'
-                          : 'w-6 sm:w-7 h-6 sm:h-7 bg-slate-800/80 border border-slate-700 text-slate-400 text-[10px] hover:border-slate-500'
+                          ? 'w-5 sm:w-6 h-5 sm:h-6 bg-emerald-500/30 border border-emerald-400/60 text-emerald-300 font-bold text-[9px]'
+                          : 'w-5 sm:w-6 h-5 sm:h-6 bg-slate-800/80 border border-slate-700 text-slate-400 text-[9px] hover:border-slate-500'
                       }`}
                     >
                       {isRev ? (
-                        <Check className="w-3 h-3 stroke-[3]" />
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
                       ) : (
                         <span>{i + 1}</span>
                       )}
@@ -331,16 +331,16 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                 })}
               </div>
 
-              <div className="text-[11px] sm:text-xs font-mono text-slate-400">
+              <div className="text-[10px] sm:text-xs font-mono text-slate-400">
                 Card <strong className="text-amber-300 font-bold">#{currentCard.cardNumber}</strong> ({currentIndex + 1}/{newCards.length})
               </div>
             </div>
 
             {/* Central Unveil Arena */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-center flex-1">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-6 items-center flex-1">
               
               {/* Left/Center: The Floating 3D Card Artifact */}
-              <div className="md:col-span-6 flex flex-col items-center justify-center py-1 sm:py-3">
+              <div className="md:col-span-6 flex flex-col items-center justify-center py-1">
                 <div
                   ref={cardRef}
                   onMouseMove={handleMouseMove}
@@ -359,7 +359,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                   style={{ perspective: 1200 }}
                 >
                   {/* Arcane Summoning Ring (Rotating SVG Behind Card) */}
-                  <div className="absolute -inset-10 sm:-inset-14 flex items-center justify-center pointer-events-none">
+                  <div className="absolute -inset-8 sm:-inset-12 flex items-center justify-center pointer-events-none">
                     <div 
                       className={`w-full h-full rounded-full border border-dashed transition-all duration-700 ${
                         isCharging
@@ -398,11 +398,11 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                           }
                         : isCurrentRevealed
                         ? {
-                            y: [0, -6, 0],
+                            y: [0, -5, 0],
                             scale: 1,
                           }
                         : {
-                            y: [0, -8, 0],
+                            y: [0, -6, 0],
                             scale: 1,
                           }
                     }
@@ -412,7 +412,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                       duration: isCharging ? 0.2 : 3.2,
                       ease: 'easeInOut',
                     }}
-                    className="w-[190px] xs:w-[220px] sm:w-[260px] md:w-[290px] aspect-[1/1.4] rounded-2xl relative shadow-2xl"
+                    className="w-[180px] xs:w-[200px] sm:w-[250px] md:w-[280px] aspect-[1/1.4] rounded-2xl relative shadow-2xl"
                   >
                     {/* Flipping 3D Inner Wrapper */}
                     <motion.div
@@ -470,9 +470,9 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                             <motion.div
                               animate={{ scale: [1, 1.15, 1], rotate: [0, 5, -5, 0] }}
                               transition={{ repeat: Infinity, duration: 2 }}
-                              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-amber-400 to-amber-300 text-slate-950 flex items-center justify-center shadow-lg shadow-amber-400/50 mb-2"
+                              className="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-amber-400 to-amber-300 text-slate-950 flex items-center justify-center shadow-lg shadow-amber-400/50 mb-1.5"
                             >
-                              <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 fill-current" />
+                              <Sparkles className="w-5 h-5 sm:w-7 sm:h-7 fill-current" />
                             </motion.div>
                             <span className="font-display font-black text-xs sm:text-sm text-white tracking-widest uppercase drop-shadow">
                               Tap to Summon
@@ -487,32 +487,60 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                   </motion.div>
                 </div>
 
-                {/* Flip Inspection Hint */}
+                {/* MOBILE ONLY: Quick Card Header & Dedicated Lore Button directly below card */}
                 {isCurrentRevealed && (
-                  <button
-                    onClick={() => {
-                      sound.playCardFlip();
-                      setIsFlippedManual(!isFlippedManual);
-                    }}
-                    className="mt-2.5 text-[11px] sm:text-xs text-slate-400 hover:text-white flex items-center gap-1.5 transition active:scale-95"
-                  >
-                    <RotateCw className="w-3 h-3 text-cyan-400" />
-                    Flip to inspect {isFlippedManual ? 'Front Art' : 'Celestial Back'}
-                  </button>
+                  <div className="md:hidden w-full flex flex-col items-center gap-1.5 mt-2">
+                    <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                      <span className="font-display font-bold text-sm text-white">
+                        {currentCard.title}
+                      </span>
+                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
+                        {currentCard.rarity}
+                      </span>
+                      <span className="text-[10px] text-cyan-300 font-mono">
+                        {currentCard.element}
+                      </span>
+                    </div>
+
+                    {/* Dual Action Buttons: Flip and Open Lore Modal */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          sound.playCardFlip();
+                          setIsFlippedManual(!isFlippedManual);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-[10px] text-slate-300 hover:text-white flex items-center gap-1 transition active:scale-95"
+                      >
+                        <RotateCw className="w-3 h-3 text-cyan-400" />
+                        <span>Flip ({isFlippedManual ? 'Front' : 'Back'})</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          sound.playSparkle();
+                          setShowMobileLore(true);
+                        }}
+                        className="px-3 py-1 rounded-lg bg-gradient-to-r from-amber-500/20 to-purple-500/20 border border-amber-400/50 text-[10px] font-bold text-amber-300 flex items-center gap-1.5 transition active:scale-95 shadow-sm"
+                      >
+                        <ScrollText className="w-3 h-3 text-amber-400" />
+                        <span>View Lore & Stats</span>
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
 
-              {/* Right Side: Walkout Attributes, Lore & Controls */}
-              <div className="md:col-span-6 flex flex-col justify-between h-full space-y-3">
+              {/* DESKTOP ONLY: Walkout Attributes, Lore & Controls (Hidden on Mobile for zero-scroll card focus) */}
+              <div className="hidden md:flex md:col-span-6 flex-col justify-between h-full space-y-3">
                 <AnimatePresence mode="wait">
                   {isCurrentRevealed ? (
                     <motion.div
-                      key={`revealed-${currentCard.id}`}
+                      key={`revealed-desktop-${currentCard.id}`}
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -15 }}
                       transition={{ duration: 0.4 }}
-                      className="space-y-2.5 sm:space-y-3"
+                      className="space-y-3"
                     >
                       {/* Rarity Stomp Badge */}
                       <div className="flex items-center gap-2 flex-wrap">
@@ -520,93 +548,88 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                           initial={{ scale: 2, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           transition={{ type: 'spring', damping: 14, stiffness: 300 }}
-                          className="px-2.5 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 to-rose-500 text-slate-950 shadow-md shadow-amber-500/25"
+                          className="px-2.5 py-1 rounded-lg text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 to-rose-500 text-slate-950 shadow-md shadow-amber-500/25"
                         >
                           ★ {currentCard.rarity}
                         </motion.span>
-                        <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-bold bg-cyan-950/80 border border-cyan-500/40 text-cyan-300">
+                        <span className="px-2 py-0.5 rounded-lg text-xs font-bold bg-cyan-950/80 border border-cyan-500/40 text-cyan-300">
                           {currentCard.element}
                         </span>
-                        <span className="text-[10px] sm:text-xs font-mono text-slate-400">
+                        <span className="text-xs font-mono text-slate-400">
                           #{currentCard.cardNumber}
                         </span>
                       </div>
 
                       {/* Title & Subtitle */}
                       <div>
-                        <h3 className="font-display font-black text-xl sm:text-2xl md:text-3xl text-white tracking-tight">
+                        <h3 className="font-display font-black text-2xl lg:text-3xl text-white tracking-tight">
                           {currentCard.title}
                         </h3>
-                        <p className="text-xs sm:text-sm font-semibold text-amber-300">
+                        <p className="text-sm font-semibold text-amber-300">
                           {currentCard.subtitle}
                         </p>
                       </div>
 
                       {/* Character Quote Bubble (Comedic / Lore Voice) */}
                       {currentCard.flavorText && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.2 }}
-                          className="flex items-start gap-2 bg-gradient-to-r from-amber-500/10 to-transparent p-2 rounded-xl border-l-2 border-amber-400 text-xs italic text-slate-200"
-                        >
+                        <div className="flex items-start gap-2 bg-gradient-to-r from-amber-500/10 to-transparent p-2 rounded-xl border-l-2 border-amber-400 text-xs italic text-slate-200">
                           <MessageSquareQuote className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                           <span>{currentCard.flavorText}</span>
-                        </motion.div>
+                        </div>
                       )}
 
                       {/* Live Animated Stat Tiles */}
-                      <div className="grid grid-cols-4 gap-1.5 sm:gap-2 bg-slate-950/70 p-2 sm:p-2.5 rounded-xl border border-slate-800">
+                      <div className="grid grid-cols-4 gap-2 bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
                         <div className="text-center">
-                          <div className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-emerald-400 font-bold mb-0.5">
+                          <div className="flex items-center justify-center gap-1 text-[11px] text-emerald-400 font-bold mb-0.5">
                             <Flame className="w-3 h-3" /> HP
                           </div>
-                          <span className="font-mono font-black text-xs sm:text-sm text-white">
+                          <span className="font-mono font-black text-sm text-white">
                             {displayHp}
                           </span>
                         </div>
                         <div className="text-center">
-                          <div className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-rose-400 font-bold mb-0.5">
+                          <div className="flex items-center justify-center gap-1 text-[11px] text-rose-400 font-bold mb-0.5">
                             <Swords className="w-3 h-3" /> ATK
                           </div>
-                          <span className="font-mono font-black text-xs sm:text-sm text-white">
+                          <span className="font-mono font-black text-sm text-white">
                             {displayAtk}
                           </span>
                         </div>
                         <div className="text-center">
-                          <div className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-blue-400 font-bold mb-0.5">
+                          <div className="flex items-center justify-center gap-1 text-[11px] text-blue-400 font-bold mb-0.5">
                             <Shield className="w-3 h-3" /> DEF
                           </div>
-                          <span className="font-mono font-black text-xs sm:text-sm text-white">
+                          <span className="font-mono font-black text-sm text-white">
                             {currentCard.defense}
                           </span>
                         </div>
                         <div className="text-center">
-                          <div className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-amber-400 font-bold mb-0.5">
+                          <div className="flex items-center justify-center gap-1 text-[11px] text-amber-400 font-bold mb-0.5">
                             <Zap className="w-3 h-3" /> SPD
                           </div>
-                          <span className="font-mono font-black text-xs sm:text-sm text-white">
+                          <span className="font-mono font-black text-sm text-white">
                             {currentCard.speed}
                           </span>
                         </div>
                       </div>
 
                       {/* Ability Pill / Lore Toggle */}
-                      <div className="bg-slate-950/50 p-2 sm:p-2.5 rounded-xl border border-slate-800/80">
+                      <div className="bg-slate-950/50 p-2.5 rounded-xl border border-slate-800/80">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] sm:text-xs font-bold text-cyan-300 flex items-center gap-1">
+                          <span className="text-xs font-bold text-cyan-300 flex items-center gap-1">
                             <Award className="w-3.5 h-3.5" />
                             {currentCard.abilityName}
                           </span>
                           <button
-                            onClick={() => setShowLore(!showLore)}
+                            onClick={() => setShowLoreDetails(!showLoreDetails)}
                             className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1"
                           >
                             <BookOpen className="w-3 h-3" />
-                            {showLore ? 'Hide' : 'Details'}
+                            {showLoreDetails ? 'Hide' : 'Details'}
                           </button>
                         </div>
-                        <p className="text-[11px] text-slate-300 leading-relaxed mt-1">
+                        <p className="text-xs text-slate-300 leading-relaxed mt-1">
                           {currentCard.abilityDesc}
                         </p>
                       </div>
@@ -618,17 +641,11 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                     </motion.div>
                   ) : (
                     /* UNREVEALED MYSTERY STATE */
-                    <motion.div
-                      key="unrevealed-callout"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="py-4 sm:py-6 text-center md:text-left space-y-3"
-                    >
+                    <div className="py-6 space-y-3">
                       <div className="inline-block p-2.5 rounded-2xl bg-amber-400/10 border border-amber-400/25 text-amber-300">
                         <Sparkles className="w-6 h-6 animate-pulse" />
                       </div>
-                      <h3 className="font-display font-black text-lg sm:text-xl text-white">
+                      <h3 className="font-display font-black text-xl text-white">
                         Cosmic Relic #{currentCard.cardNumber}
                       </h3>
                       <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
@@ -639,79 +656,83 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                       <button
                         onClick={handleUnveilCurrent}
                         disabled={isCharging}
-                        className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition flex items-center justify-center gap-2"
+                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:brightness-110 text-slate-950 font-display font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition flex items-center justify-center gap-2"
                       >
                         <Sparkles className="w-4 h-4 fill-current" />
                         {isCharging ? 'Unleashing Power...' : 'Unveil Card Now'}
                       </button>
-                    </motion.div>
+                    </div>
                   )}
                 </AnimatePresence>
-
-                {/* Bottom Step Navigation */}
-                <div className="flex items-center justify-between border-t border-slate-800/80 pt-3 mt-auto shrink-0">
-                  <button
-                    onClick={handlePrev}
-                    disabled={currentIndex === 0}
-                    className="p-2 sm:px-3 sm:py-2 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-300 hover:text-white disabled:opacity-25 disabled:pointer-events-none transition flex items-center gap-1 text-xs font-semibold"
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                    <span>Prev</span>
-                  </button>
-
-                  {isCurrentRevealed ? (
-                    currentIndex < newCards.length - 1 ? (
-                      <button
-                        onClick={handleNext}
-                        className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20 active:scale-95 transition flex items-center gap-1.5"
-                      >
-                        <span>Next Card</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setIsComplete(true)}
-                        className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 active:scale-95 transition flex items-center gap-1.5"
-                      >
-                        <span>View All Unlocked</span>
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
-                      </button>
-                    )
-                  ) : (
-                    <button
-                      onClick={handleUnveilCurrent}
-                      disabled={isCharging}
-                      className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md shadow-amber-400/25 active:scale-95 transition"
-                    >
-                      Summon
-                    </button>
-                  )}
-                </div>
               </div>
+
             </div>
+
+            {/* Bottom Primary Controls (ALWAYS ON SCREEN WITHOUT SCROLLING!) */}
+            <div className="flex items-center justify-between border-t border-slate-800/80 pt-2.5 mt-2 shrink-0">
+              <button
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className="p-2 sm:px-3 sm:py-2 rounded-xl border border-slate-800 bg-slate-950/60 text-slate-300 hover:text-white disabled:opacity-25 disabled:pointer-events-none transition flex items-center gap-1 text-xs font-semibold"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <span>Prev</span>
+              </button>
+
+              {/* Center / Action Button */}
+              {isCurrentRevealed ? (
+                currentIndex < newCards.length - 1 ? (
+                  <button
+                    onClick={handleNext}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-400 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition flex items-center gap-2"
+                  >
+                    <span>Next Card ({currentIndex + 2}/{newCards.length})</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsComplete(true)}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 active:scale-95 transition flex items-center gap-2"
+                  >
+                    <span>Finish & View All</span>
+                    <Check className="w-4 h-4 stroke-[3]" />
+                  </button>
+                )
+              ) : (
+                <button
+                  onClick={handleUnveilCurrent}
+                  disabled={isCharging}
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition flex items-center gap-2"
+                >
+                  <Sparkles className="w-3.5 h-3.5 fill-current" />
+                  <span>{isCharging ? 'Summoning...' : 'Unveil Card'}</span>
+                </button>
+              )}
+            </div>
+
           </div>
         ) : (
           /* FINALE SCREEN: All Cards Summoned Showcase */
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-4 sm:py-6 space-y-4 sm:space-y-6"
+            className="text-center py-3 sm:py-6 space-y-3 sm:space-y-6 flex-1 overflow-y-auto"
           >
-            <div className="inline-flex p-3 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 text-slate-950 shadow-lg shadow-amber-500/30">
-              <Sparkles className="w-7 h-7 fill-current" />
+            <div className="inline-flex p-2.5 sm:p-3 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 text-slate-950 shadow-lg shadow-amber-500/30">
+              <Sparkles className="w-6 sm:w-7 h-6 sm:h-7 fill-current" />
             </div>
 
             <div>
-              <h3 className="font-display font-black text-xl sm:text-3xl text-white">
+              <h3 className="font-display font-black text-lg sm:text-3xl text-white">
                 ALL {newCards.length} NEW CARDS SUMMONED!
               </h3>
-              <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto mt-1">
+              <p className="text-[11px] sm:text-sm text-slate-400 max-w-md mx-auto mt-0.5">
                 Your binder has been enriched with the latest celestial arrivals.
               </p>
             </div>
 
             {/* Fanned / Showcase Responsive Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3 max-h-[42vh] overflow-y-auto p-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3 max-h-[44vh] overflow-y-auto p-1">
               {newCards.map((c) => (
                 <div
                   key={c.id}
@@ -735,7 +756,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
             </div>
 
             {/* Final Action Controls */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-3 border-t border-slate-800">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2 border-t border-slate-800">
               <button
                 onClick={() => {
                   onFilterNewInGallery();
@@ -758,6 +779,123 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
           </motion.div>
         )}
       </motion.div>
+
+      {/* MOBILE-ONLY SLIDE-UP LORE & STATS DRAWER (Clean, dedicated sheet) */}
+      <AnimatePresence>
+        {showMobileLore && currentCard && (
+          <div className="md:hidden fixed inset-0 z-50 flex flex-col justify-end">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowMobileLore(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            />
+
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 26, stiffness: 280 }}
+              className="relative w-full max-h-[82vh] bg-[#09101d] border-t border-amber-400/50 rounded-t-3xl shadow-2xl p-4 flex flex-col overflow-y-auto z-10 space-y-3"
+            >
+              {/* Drawer Handle */}
+              <div className="w-10 h-1 bg-slate-700 rounded-full mx-auto shrink-0 mb-1" />
+
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-xs text-amber-300 font-bold">#{currentCard.cardNumber}</span>
+                    <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">
+                      {currentCard.rarity}
+                    </span>
+                    <span className="text-[10px] text-cyan-300 font-mono">
+                      {currentCard.element}
+                    </span>
+                  </div>
+                  <h3 className="font-display font-black text-lg text-white">
+                    {currentCard.title}
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    {currentCard.subtitle}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setShowMobileLore(false)}
+                  className="p-1.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Quote Bubble */}
+              {currentCard.flavorText && (
+                <div className="flex items-start gap-2 bg-gradient-to-r from-amber-500/15 to-transparent p-2.5 rounded-xl border-l-2 border-amber-400 text-xs italic text-slate-200">
+                  <MessageSquareQuote className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <span>{currentCard.flavorText}</span>
+                </div>
+              )}
+
+              {/* 4 Stat Boxes */}
+              <div className="grid grid-cols-4 gap-2 bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-1 text-[10px] text-emerald-400 font-bold mb-0.5">
+                    <Flame className="w-3 h-3" /> HP
+                  </div>
+                  <span className="font-mono font-black text-sm text-white">
+                    {currentCard.hp}
+                  </span>
+                </div>
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-1 text-[10px] text-rose-400 font-bold mb-0.5">
+                    <Swords className="w-3 h-3" /> ATK
+                  </div>
+                  <span className="font-mono font-black text-sm text-white">
+                    {currentCard.attack}
+                  </span>
+                </div>
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-1 text-[10px] text-blue-400 font-bold mb-0.5">
+                    <Shield className="w-3 h-3" /> DEF
+                  </div>
+                  <span className="font-mono font-black text-sm text-white">
+                    {currentCard.defense}
+                  </span>
+                </div>
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-1 text-[10px] text-amber-400 font-bold mb-0.5">
+                    <Zap className="w-3 h-3" /> SPD
+                  </div>
+                  <span className="font-mono font-black text-sm text-white">
+                    {currentCard.speed}
+                  </span>
+                </div>
+              </div>
+
+              {/* Special Ability Box */}
+              <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                <div className="text-xs font-bold text-cyan-300 flex items-center gap-1.5 mb-1">
+                  <Award className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Ability: {currentCard.abilityName}</span>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  {currentCard.abilityDesc}
+                </p>
+              </div>
+
+              {/* Dismiss Button */}
+              <button
+                onClick={() => setShowMobileLore(false)}
+                className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs active:scale-95 transition"
+              >
+                Close Lore & Return to Card
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
