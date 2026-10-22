@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search, Sparkles, Compass, User, ArrowUpDown, RotateCcw, Check } from 'lucide-react';
 import { SortOption } from '../types';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface MobileFilterDrawerProps {
   isOpen: boolean;
@@ -57,18 +58,20 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
   totalFilteredCount,
   onResetFilters,
 }) => {
+  useBodyScrollLock(isOpen);
+
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <div className="md:hidden fixed inset-0 z-50 flex flex-col justify-end">
+      <div className="md:hidden fixed inset-0 z-50 flex flex-col justify-end overscroll-contain touch-none">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm touch-none"
         />
 
         {/* Drawer Sheet */}
@@ -77,7 +80,7 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-          className="relative w-full max-h-[85vh] bg-[#09101d] border-t border-cyan-500/40 rounded-t-3xl shadow-2xl flex flex-col overflow-hidden z-10"
+          className="relative w-full max-h-[85vh] bg-[#09101d] border-t border-cyan-500/40 rounded-t-3xl shadow-2xl flex flex-col overflow-hidden z-10 overscroll-contain"
         >
           {/* Drawer Handle */}
           <div className="w-12 h-1.5 bg-slate-700 rounded-full mx-auto mt-3 mb-2 shrink-0" />

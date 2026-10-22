@@ -18,6 +18,7 @@ import {
 import { QuestItem } from '../data/questsData';
 import { CardItem } from '../types';
 import { sound } from '../utils/audio';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import confetti from 'canvas-confetti';
 
 interface ProofModalProps {
@@ -33,6 +34,9 @@ export const ProofModal: React.FC<ProofModalProps> = ({
   onClose,
   onVerified,
 }) => {
+  // Lock background body scroll
+  useBodyScrollLock(true);
+
   // State for different proof types
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [textLog, setTextLog] = useState('');
@@ -176,14 +180,14 @@ export const ProofModal: React.FC<ProofModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain touch-none">
       {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black/90 backdrop-blur-2xl"
+        className="fixed inset-0 bg-black/90 backdrop-blur-2xl touch-none"
       />
 
       {/* Main Dialog Window */}
@@ -191,7 +195,7 @@ export const ProofModal: React.FC<ProofModalProps> = ({
         initial={{ scale: 0.92, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.92, opacity: 0 }}
-        className="relative w-full max-w-lg bg-[#09101d] border border-cyan-500/40 rounded-2xl sm:rounded-3xl shadow-2xl shadow-cyan-950/80 overflow-hidden z-10 my-auto p-5 sm:p-7 flex flex-col"
+        className="relative w-full max-w-lg bg-[#09101d] border border-cyan-500/40 rounded-2xl sm:rounded-3xl shadow-2xl shadow-cyan-950/80 overflow-hidden z-10 my-auto p-5 sm:p-7 flex flex-col overscroll-contain"
       >
         {/* Close Button */}
         <button

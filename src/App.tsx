@@ -14,6 +14,7 @@ import { MobileFilterDrawer } from './components/MobileFilterDrawer';
 import { QuestsModal } from './components/QuestsModal';
 import { NewCardRevealModal } from './components/NewCardRevealModal';
 import { sound } from './utils/audio';
+import { useBodyScrollLock } from './hooks/useBodyScrollLock';
 import { SearchX } from 'lucide-react';
 
 const RARITY_TIERS: Record<string, number> = {
@@ -71,6 +72,17 @@ export function App() {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isQuestsOpen, setIsQuestsOpen] = useState(false);
   const [isRevealOpen, setIsRevealOpen] = useState(false);
+
+  // Lock background body scroll whenever any modal, drawer, or menu is open
+  const isAnyModalOpen = Boolean(
+    inspectedCard ||
+    isBoosterOpen ||
+    isUploadOpen ||
+    isMobileFilterOpen ||
+    isQuestsOpen ||
+    isRevealOpen
+  );
+  useBodyScrollLock(isAnyModalOpen);
 
   // Save to localStorage when owned or favorite sets change
   useEffect(() => {

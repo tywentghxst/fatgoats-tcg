@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { X, Sparkles, PackageOpen, CheckCircle, RotateCcw } from 'lucide-react';
 import { CardItem as CardItemType } from '../types';
 import { sound } from '../utils/audio';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import confetti from 'canvas-confetti';
 
 interface BoosterPackModalProps {
@@ -23,6 +24,9 @@ export const BoosterPackModal: React.FC<BoosterPackModalProps> = ({
   const [packOpened, setPackOpened] = useState(false);
   const [pulledCards, setPulledCards] = useState<CardItemType[]>([]);
   const [revealedIndices, setRevealedIndices] = useState<number[]>([]);
+
+  // Lock background body scroll
+  useBodyScrollLock(true);
 
   // Function to pull 5 random cards
   const openPack = () => {
@@ -68,21 +72,21 @@ export const BoosterPackModal: React.FC<BoosterPackModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain touch-none">
       {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black/90 backdrop-blur-2xl"
+        className="fixed inset-0 bg-black/90 backdrop-blur-2xl touch-none"
       />
 
       {/* Main Container */}
       <motion.div
         initial={{ scale: 0.92, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="relative w-full max-w-4xl bg-slate-900/95 border border-amber-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-8 z-10 my-auto text-center overflow-hidden shadow-2xl shadow-amber-950/60 max-h-[95vh] overflow-y-auto"
+        className="relative w-full max-w-4xl bg-slate-900/95 border border-amber-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-8 z-10 my-auto text-center overflow-hidden shadow-2xl shadow-amber-950/60 max-h-[95vh] overflow-y-auto overscroll-contain"
       >
         {/* Close Button */}
         <button

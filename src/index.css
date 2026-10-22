@@ -13,6 +13,13 @@
     font-family: 'Inter', system-ui, sans-serif;
     overflow-x: hidden;
   }
+
+  body.modal-open,
+  html.modal-open {
+    overflow: hidden !important;
+    touch-action: none;
+    overscroll-behavior: contain;
+  }
 }
 
 /* Custom Scrollbar */

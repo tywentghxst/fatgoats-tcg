@@ -4,6 +4,7 @@ import { X, UploadCloud, FileArchive, CheckCircle, AlertCircle, Sparkles, Folder
 import { parseZipArchive } from '../utils/zipParser';
 import { CardItem } from '../types';
 import { sound } from '../utils/audio';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface ZipUploaderModalProps {
   onClose: () => void;
@@ -21,6 +22,9 @@ export const ZipUploaderModal: React.FC<ZipUploaderModalProps> = ({
   const [currentFilename, setCurrentFilename] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [parsedResult, setParsedResult] = useState<{ cards: CardItem[]; cardBackUrl: string } | null>(null);
+
+  // Lock background body scroll
+  useBodyScrollLock(true);
 
   const processFile = async (file: File) => {
     if (!file.name.toLowerCase().endsWith('.zip')) {
@@ -67,21 +71,21 @@ export const ZipUploaderModal: React.FC<ZipUploaderModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain touch-none">
       {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black/85 backdrop-blur-2xl"
+        className="fixed inset-0 bg-black/85 backdrop-blur-2xl touch-none"
       />
 
       {/* Modal Dialog */}
       <motion.div
         initial={{ scale: 0.92, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="relative w-full max-w-2xl bg-[#0b1322] border border-cyan-500/30 rounded-3xl p-6 sm:p-8 z-10 my-auto shadow-2xl shadow-cyan-950/60"
+        className="relative w-full max-w-2xl bg-[#0b1322] border border-cyan-500/30 rounded-3xl p-6 sm:p-8 z-10 my-auto shadow-2xl shadow-cyan-950/60 overscroll-contain"
       >
         <button
           onClick={onClose}

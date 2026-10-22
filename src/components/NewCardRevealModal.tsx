@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { CardItem as CardItemType } from '../types';
 import { sound } from '../utils/audio';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface NewCardRevealModalProps {
   newCards: CardItemType[];
@@ -50,6 +51,9 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
   // Animated stat counters
   const [displayHp, setDisplayHp] = useState(0);
   const [displayAtk, setDisplayAtk] = useState(0);
+
+  // Lock body scroll while summoning modal is open
+  useBodyScrollLock(true);
 
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -222,14 +226,14 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
   if (!currentCard) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 overflow-hidden overscroll-contain touch-none">
       {/* Deep cosmic backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-[#03060f]/95 backdrop-blur-2xl"
+        className="fixed inset-0 bg-[#03060f]/95 backdrop-blur-2xl touch-none"
       />
 
       {/* Radiant Screen Flash on Reveal */}
@@ -252,13 +256,13 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#03060f_90%)]" />
       </div>
 
-      {/* Modal Dialog Card Container - Uses maximum vertical height on mobile so the card is huge! */}
+      {/* Modal Dialog Card Container - Uses dynamic viewport height so controls are NEVER pushed off screen! */}
       <motion.div
         initial={{ opacity: 0, scale: 0.94, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.94, y: 10 }}
         transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-        className="relative z-10 w-full max-w-[96vw] sm:max-w-xl md:max-w-4xl bg-slate-900/95 border border-amber-500/35 rounded-2xl sm:rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.25)] p-2.5 sm:p-6 flex flex-col justify-between my-auto h-[93vh] sm:h-auto max-h-[96vh] overflow-hidden"
+        className="relative z-10 w-full max-w-[96vw] sm:max-w-xl md:max-w-4xl bg-slate-900/95 border border-amber-500/35 rounded-2xl sm:rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.25)] p-2.5 sm:p-6 flex flex-col justify-between my-auto h-[90dvh] sm:h-auto max-h-[92dvh] sm:max-h-[94vh] overflow-hidden overscroll-contain"
       >
         {/* Streamlined Top Bar */}
         <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-1.5 shrink-0">
@@ -337,10 +341,41 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
             </div>
 
             {/* Central Unveil Arena - Maximizes vertical space for big card display */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-6 items-center flex-1 min-h-0">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-6 items-center flex-1 min-h-0 relative">
               
-              {/* Left/Center: The Floating 3D Card Artifact (Scaled MUCH Larger!) */}
-              <div className="md:col-span-6 flex flex-col items-center justify-center flex-1 min-h-0 py-0.5">
+              {/* Left/Center: The Floating 3D Card Artifact (Scaled dynamically to fit screen!) */}
+              <div className="md:col-span-6 flex flex-col items-center justify-center flex-1 min-h-0 py-0.5 relative w-full">
+                {/* Floating Navigation Chevrons on Mobile Beside Card */}
+                <div className="md:hidden absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-0.5 pointer-events-none z-20">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePrev();
+                    }}
+                    disabled={currentIndex === 0}
+                    className="pointer-events-auto w-8 h-8 rounded-full bg-slate-950/85 border border-slate-700/80 text-white flex items-center justify-center disabled:opacity-0 transition active:scale-90 shadow-lg backdrop-blur-sm"
+                    title="Previous Card"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isCurrentRevealed && currentIndex < newCards.length - 1) {
+                        handleNext();
+                      } else if (!isCurrentRevealed) {
+                        handleUnveilCurrent();
+                      }
+                    }}
+                    disabled={currentIndex >= newCards.length - 1 && isCurrentRevealed}
+                    className="pointer-events-auto w-8 h-8 rounded-full bg-cyan-500/90 border border-cyan-400 text-slate-950 font-bold flex items-center justify-center disabled:opacity-0 transition active:scale-90 shadow-lg shadow-cyan-500/30 backdrop-blur-sm"
+                    title="Next Card"
+                  >
+                    <ChevronRight className="w-4 h-4 stroke-[2.5]" />
+                  </button>
+                </div>
+
                 <div
                   ref={cardRef}
                   onMouseMove={handleMouseMove}
@@ -382,7 +417,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                     />
                   )}
 
-                  {/* 3D Motion Card Container - Significantly Enlarged! */}
+                  {/* 3D Motion Card Container - Dynamically sized to never overflow! */}
                   <motion.div
                     style={{
                       rotateX,
@@ -412,7 +447,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                       duration: isCharging ? 0.2 : 3.2,
                       ease: 'easeInOut',
                     }}
-                    className="w-[240px] xs:w-[275px] sm:w-[310px] md:w-[330px] max-h-[54vh] sm:max-h-[62vh] aspect-[1/1.4] rounded-2xl relative shadow-2xl"
+                    className="h-[38dvh] xs:h-[42dvh] sm:h-auto sm:max-h-[58dvh] max-h-[420px] aspect-[1/1.4] w-auto max-w-[min(72vw,310px)] rounded-2xl relative shadow-2xl"
                   >
                     {/* Flipping 3D Inner Wrapper */}
                     <motion.div
@@ -654,11 +689,11 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
             </div>
 
             {/* Bottom Primary Controls (Pinned to Bottom, Highly Accessible!) */}
-            <div className="flex items-center justify-between border-t border-slate-800/80 pt-2 mt-1.5 shrink-0">
+            <div className="flex items-center justify-between border-t border-slate-800/80 pt-2 mt-auto shrink-0 bg-slate-900/95 z-30 pb-0.5">
               <button
                 onClick={handlePrev}
                 disabled={currentIndex === 0}
-                className="px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950/80 text-slate-300 hover:text-white disabled:opacity-20 text-xs font-bold transition flex items-center gap-1"
+                className="px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950/80 text-slate-300 hover:text-white disabled:opacity-20 text-xs font-bold transition flex items-center gap-1 active:scale-95"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Prev</span>
@@ -672,14 +707,14 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                     className="flex-1 ml-2.5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition flex items-center justify-center gap-1.5"
                   >
                     <span>NEXT CARD ({currentIndex + 2}/{newCards.length})</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-4 h-4 stroke-[3]" />
                   </button>
                 ) : (
                   <button
                     onClick={() => setIsComplete(true)}
                     className="flex-1 ml-2.5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-emerald-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 active:scale-95 transition flex items-center justify-center gap-1.5"
                   >
-                    <span>Finish & View All</span>
+                    <span>FINISH & VIEW ALL</span>
                     <Check className="w-4 h-4 stroke-[3]" />
                   </button>
                 )

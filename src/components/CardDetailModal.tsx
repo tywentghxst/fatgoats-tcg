@@ -23,6 +23,7 @@ import { CardItem as CardItemType } from '../types';
 import { FAT_GOATS_QUESTS } from '../data/questsData';
 import { sound } from '../utils/audio';
 import { ProofModal } from './ProofModal';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface CardDetailModalProps {
   card: CardItemType | null;
@@ -51,6 +52,9 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   const [mobileTab, setMobileTab] = useState<'card' | 'stats'>('card');
   const [isProofModalOpen, setIsProofModalOpen] = useState(false);
   const cardViewerRef = useRef<HTMLDivElement>(null);
+
+  // Lock background body scroll
+  useBodyScrollLock(true);
 
   // Reset flip status & tab when card changes
   useEffect(() => {
@@ -152,7 +156,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 lg:p-10 overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 lg:p-10 overflow-y-auto overscroll-contain touch-none">
         
         {/* Backdrop overlay */}
         <motion.div
@@ -160,7 +164,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/90 backdrop-blur-2xl"
+          className="fixed inset-0 bg-black/90 backdrop-blur-2xl touch-none"
         />
 
         {/* Modal Window Container */}
@@ -169,7 +173,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 15 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-5xl bg-[#09101d] border border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl shadow-cyan-950/60 overflow-hidden z-10 my-auto flex flex-col max-h-[96vh] sm:max-h-none"
+          className="relative w-full max-w-5xl bg-[#09101d] border border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl shadow-cyan-950/60 overflow-hidden z-10 my-auto flex flex-col max-h-[94vh] overscroll-contain"
         >
           {/* Header Bar */}
           <div className="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-4 border-b border-slate-800 bg-slate-900/60 shrink-0">
@@ -236,21 +240,23 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
             <div className={`lg:col-span-5 flex flex-col items-center justify-center ${mobileTab === 'stats' ? 'hidden sm:flex' : 'flex'}`}>
               
               {/* Prev / Next controls above */}
-              <div className="w-full flex items-center justify-between mb-2 text-xs text-slate-400 px-2">
+              <div className="w-full flex items-center justify-between mb-2 text-xs text-slate-300 px-1">
                 <button
                   onClick={onPrevCard}
-                  className="flex items-center gap-1 hover:text-cyan-300 active:scale-95 transition py-1"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-cyan-400 text-slate-200 hover:text-white active:scale-95 transition text-xs font-bold shadow-sm"
                 >
-                  <ChevronLeft className="w-4 h-4" /> <span className="hidden sm:inline">Previous</span>
+                  <ChevronLeft className="w-4 h-4 text-cyan-400" />
+                  <span>Prev</span>
                 </button>
-                <span className="text-[11px] font-mono text-cyan-400">
-                  {card.cardNumber} of 36
+                <span className="text-[11px] font-mono text-cyan-400 font-bold bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">
+                  #{card.cardNumber} of 36
                 </span>
                 <button
                   onClick={onNextCard}
-                  className="flex items-center gap-1 hover:text-cyan-300 active:scale-95 transition py-1"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/90 border border-cyan-500/60 hover:bg-cyan-900 text-cyan-300 hover:text-white active:scale-95 transition text-xs font-bold shadow-sm"
                 >
-                  <span className="hidden sm:inline">Next</span> <ChevronRight className="w-4 h-4" />
+                  <span>Next</span>
+                  <ChevronRight className="w-4 h-4 text-cyan-400" />
                 </button>
               </div>
 
@@ -346,10 +352,18 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
               </div>
 
               {/* Mobile Quick Action Buttons right below card */}
-              <div className="flex sm:hidden items-center justify-center gap-2 mt-3 w-full">
+              <div className="flex sm:hidden items-center justify-between gap-1.5 mt-3 w-full">
+                <button
+                  onClick={onPrevCard}
+                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white active:scale-95 transition"
+                  title="Previous Card"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+
                 <button
                   onClick={() => onToggleOwned(card.id)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold ${
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-semibold ${
                     isOwned
                       ? 'bg-emerald-500 text-slate-950'
                       : 'bg-slate-800 text-slate-200'
@@ -375,10 +389,18 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
                 <button
                   onClick={() => setMobileTab('stats')}
-                  className="px-3 py-2 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-medium flex items-center gap-1"
+                  className="px-2.5 py-2 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-medium flex items-center gap-1"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
                   <span>Lore</span>
+                </button>
+
+                <button
+                  onClick={onNextCard}
+                  className="p-2.5 rounded-xl bg-cyan-950/90 border border-cyan-500/60 text-cyan-300 hover:text-white active:scale-95 transition"
+                  title="Next Card"
+                >
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
 

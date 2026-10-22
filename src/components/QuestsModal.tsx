@@ -15,6 +15,7 @@ import { FAT_GOATS_QUESTS, QuestItem, ProofType } from '../data/questsData';
 import { CardItem } from '../types';
 import { sound } from '../utils/audio';
 import { ProofModal } from './ProofModal';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface QuestsModalProps {
   allCards: CardItem[];
@@ -36,6 +37,9 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [randomQuest, setRandomQuest] = useState<QuestItem | null>(null);
   const [activeProofQuest, setActiveProofQuest] = useState<QuestItem | null>(null);
+
+  // Lock background body scroll
+  useBodyScrollLock(true);
 
   // Map cards by id for fast lookups
   const cardMap = useMemo(() => {
@@ -94,14 +98,14 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain touch-none">
       {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black/90 backdrop-blur-2xl"
+        className="fixed inset-0 bg-black/90 backdrop-blur-2xl touch-none"
       />
 
       {/* Main Window */}
@@ -109,7 +113,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({
         initial={{ scale: 0.92, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.92, opacity: 0 }}
-        className="relative w-full max-w-4xl bg-[#09101d] border border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl shadow-cyan-950/60 overflow-hidden z-10 my-auto flex flex-col max-h-[92vh]"
+        className="relative w-full max-w-4xl bg-[#09101d] border border-cyan-500/30 rounded-2xl sm:rounded-3xl shadow-2xl shadow-cyan-950/60 overflow-hidden z-10 my-auto flex flex-col max-h-[92vh] overscroll-contain"
       >
         {/* Header */}
         <div className="p-4 sm:p-6 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between gap-3 shrink-0">
