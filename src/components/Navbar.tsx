@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  Sparkles, 
   Volume2, 
   VolumeX, 
   Upload, 
@@ -8,10 +7,9 @@ import {
   Heart, 
   CheckCircle2, 
   Search,
-  Layers
+  Sparkles
 } from 'lucide-react';
 import { CollectionStats } from '../types';
-import { sound } from '../utils/audio';
 
 interface NavbarProps {
   stats: CollectionStats;
@@ -23,6 +21,7 @@ interface NavbarProps {
   onSearchChange: (q: string) => void;
   activeFilter: 'all' | 'owned' | 'unowned' | 'favorite';
   onFilterChange: (f: 'all' | 'owned' | 'unowned' | 'favorite') => void;
+  onOpenMobileFilters?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -35,33 +34,33 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSearchChange,
   activeFilter,
   onFilterChange,
+  onOpenMobileFilters,
 }) => {
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#060a12]/80 border-b border-cyan-900/30 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#060a12]/90 border-b border-cyan-900/30 transition-all">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
         
         {/* Brand / Logo */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <div className="relative group cursor-pointer">
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-cyan-500 via-amber-400 to-fuchsia-500 opacity-60 blur group-hover:opacity-100 transition duration-300 animate-pulse-slow"></div>
-            <div className="relative w-12 h-12 rounded-xl bg-slate-900 border border-cyan-500/40 overflow-hidden flex items-center justify-center shadow-lg">
+            <div className="absolute -inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-cyan-500 via-amber-400 to-fuchsia-500 opacity-60 blur group-hover:opacity-100 transition duration-300"></div>
+            <div className="relative w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-slate-900 border border-cyan-500/40 overflow-hidden flex items-center justify-center shadow-lg">
               <img 
                 src="/cards_thumb/00%20-%20Celestial%20Goat%20Card%20Back.webp" 
                 alt="Celestial Goat Logo" 
-                className="w-full h-full object-cover scale-125 hover:scale-135 transition-transform"
+                className="w-full h-full object-cover scale-125"
                 onError={(e) => {
-                  // Fallback if thumb not yet loaded
                   (e.target as HTMLImageElement).src = '/cards/00 - Celestial Goat Card Back.png';
                 }}
               />
             </div>
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-display font-black text-xl tracking-wider bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-500 bg-clip-text text-transparent uppercase drop-shadow-[0_2px_8px_rgba(245,158,11,0.3)]">
+            <div className="flex items-center gap-1">
+              <span className="font-display font-black text-base sm:text-xl tracking-wider bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-500 bg-clip-text text-transparent uppercase drop-shadow-[0_2px_8px_rgba(245,158,11,0.3)]">
                 FatGoats
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-mono font-bold tracking-widest uppercase">
+              <span className="text-[10px] sm:text-xs px-1.5 py-0.2 rounded-md sm:rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-mono font-bold tracking-wider uppercase">
                 TCG
               </span>
             </div>
@@ -71,7 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Global Search Bar */}
+        {/* Global Search Bar (Desktop) */}
         <div className="flex-1 max-w-md hidden md:block">
           <div className="relative">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-400/70" />
@@ -94,9 +93,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Action Controls & Quick Stats */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           
-          {/* Quick Filters */}
+          {/* Mobile Completion Badge (Header) */}
+          <div className="md:hidden flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
+            <Sparkles className="w-3 h-3 text-cyan-400 animate-spin" style={{ animationDuration: '6s' }} />
+            <span>{stats.completionRate}%</span>
+          </div>
+
+          {/* Quick Filters (Desktop) */}
           <div className="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800">
             <button
               onClick={() => onFilterChange('all')}
@@ -132,24 +137,32 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
-          {/* Booster Pack Simulator Button */}
+          {/* Desktop Booster Button */}
           <button
-            onClick={() => {
-              sound.playPackOpen();
-              onOpenBooster();
-            }}
+            onClick={onOpenBooster}
             title="Open Booster Pack"
-            className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 hover:brightness-110 active:scale-95 shadow-lg shadow-amber-500/20 transition-all"
+            className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 hover:brightness-110 active:scale-95 shadow-lg shadow-amber-500/20 transition-all"
           >
             <PackageOpen className="w-4 h-4" />
-            <span className="hidden sm:inline">Open Pack</span>
+            <span>Open Pack</span>
           </button>
 
-          {/* ZIP Archive Upload / Load Button */}
+          {/* Mobile Search Quick Trigger */}
+          {onOpenMobileFilters && (
+            <button
+              onClick={onOpenMobileFilters}
+              title="Search and filter cards"
+              className="md:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-400 transition-all active:scale-90"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+          )}
+
+          {/* ZIP Archive Upload Button */}
           <button
             onClick={onOpenUpload}
             title="Import or replace cards from custom ZIP archive"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-900 border border-slate-700 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition-all active:scale-95"
+            className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl text-xs font-medium bg-slate-900 border border-slate-700 hover:border-cyan-500/50 text-slate-300 hover:text-cyan-300 transition-all active:scale-95"
           >
             <Upload className="w-4 h-4 text-cyan-400" />
             <span className="hidden md:inline">Load ZIP</span>
@@ -159,7 +172,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onToggleSound}
             title={soundEnabled ? "Mute Game Audio" : "Unmute Game Audio"}
-            className={`p-2.5 rounded-xl border transition-all active:scale-90 ${
+            className={`p-2 sm:p-2.5 rounded-xl border transition-all active:scale-90 ${
               soundEnabled
                 ? 'bg-cyan-950/60 border-cyan-500/40 text-cyan-300 shadow-sm shadow-cyan-500/20'
                 : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'

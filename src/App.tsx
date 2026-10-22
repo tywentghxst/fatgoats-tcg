@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { INITIAL_CARDS, CARD_BACK_IMAGE } from './data/cardsData';
-import { CardItem as CardItemType, CollectionStats, SortOption, FilterState } from './types';
+import { CardItem as CardItemType, CollectionStats, SortOption } from './types';
 import { Navbar } from './components/Navbar';
 import { HeroStats } from './components/HeroStats';
 import { CardFilters } from './components/CardFilters';
@@ -8,8 +8,10 @@ import { CardItem } from './components/CardItem';
 import { CardDetailModal } from './components/CardDetailModal';
 import { BoosterPackModal } from './components/BoosterPackModal';
 import { ZipUploaderModal } from './components/ZipUploaderModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
+import { MobileFilterDrawer } from './components/MobileFilterDrawer';
 import { sound } from './utils/audio';
-import { Sparkles, Layers, SearchX } from 'lucide-react';
+import { SearchX } from 'lucide-react';
 
 const RARITY_TIERS: Record<string, number> = {
   'Secret Rare': 6,
@@ -63,6 +65,7 @@ export function App() {
   const [inspectedCard, setInspectedCard] = useState<CardItemType | null>(null);
   const [isBoosterOpen, setIsBoosterOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Save to localStorage when owned or favorite sets change
   useEffect(() => {
@@ -274,6 +277,12 @@ export function App() {
     }
   };
 
+  const hasActiveFilters = 
+    selectedRarity !== 'All' || 
+    selectedElement !== 'All' || 
+    selectedCharacter !== 'All' || 
+    searchQuery.trim() !== '';
+
   return (
     <div className="min-h-screen bg-[#060a12] text-slate-100 flex flex-col bg-celestial-gradient">
       
@@ -288,9 +297,12 @@ export function App() {
         onSearchChange={setSearchQuery}
         activeFilter={ownershipFilter}
         onFilterChange={setOwnershipFilter}
+        onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
       />
 
-      <main className="flex-1 pb-20">
+      {/* Main Container with safe bottom padding for floating mobile dock */}
+      <main className="flex-1 pb-28 sm:pb-20">
+        
         {/* Hero & Archival Stats Header */}
         <HeroStats
           stats={stats}
@@ -315,16 +327,17 @@ export function App() {
           totalFilteredCount={filteredCards.length}
           totalCardsCount={cards.length}
           onResetFilters={handleResetFilters}
+          onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
         />
 
-        {/* Card Gallery Grid */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Card Gallery Grid (2 Columns on mobile, up to 4 on desktop) */}
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
           {filteredCards.length > 0 ? (
             <div
-              className={`grid gap-4 sm:gap-6 ${
+              className={`grid ${
                 viewMode === 'compact'
-                  ? 'grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7'
-                  : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4'
+                  ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-4'
+                  : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-6'
               }`}
             >
               {filteredCards.map((card) => (
@@ -343,17 +356,17 @@ export function App() {
             </div>
           ) : (
             /* Empty State */
-            <div className="text-center py-20 px-4 rounded-3xl bg-slate-900/40 border border-slate-800/80 max-w-xl mx-auto my-10">
-              <SearchX className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold text-white mb-2">
+            <div className="text-center py-16 px-4 rounded-2xl sm:rounded-3xl bg-slate-900/40 border border-slate-800/80 max-w-xl mx-auto my-8">
+              <SearchX className="w-12 sm:w-16 h-12 sm:h-16 text-slate-500 mx-auto mb-3" />
+              <h3 className="font-display text-lg sm:text-xl font-bold text-white mb-2">
                 No Celestial Cards Found
               </h3>
-              <p className="text-sm text-slate-400 mb-6">
-                No cards match your current filter parameters or search term "{searchQuery}".
+              <p className="text-xs sm:text-sm text-slate-400 mb-5">
+                No cards match your current search or filter criteria.
               </p>
               <button
                 onClick={handleResetFilters}
-                className="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-cyan-500/20 active:scale-95 transition"
+                className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-cyan-500/20 active:scale-95 transition"
               >
                 Reset All Filters
               </button>
@@ -362,14 +375,43 @@ export function App() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950/80 py-8 text-center text-xs text-slate-400">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* Floating Mobile Bottom Navigation Bar */}
+      <MobileBottomNav
+        stats={stats}
+        activeFilter={ownershipFilter}
+        onFilterChange={setOwnershipFilter}
+        onOpenBooster={() => setIsBoosterOpen(true)}
+        onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
+        hasActiveFilters={hasActiveFilters}
+      />
+
+      {/* Slide-Up Mobile Filter Drawer */}
+      <MobileFilterDrawer
+        isOpen={isMobileFilterOpen}
+        onClose={() => setIsMobileFilterOpen(false)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedRarity={selectedRarity}
+        onSelectRarity={setSelectedRarity}
+        selectedElement={selectedElement}
+        onSelectElement={setSelectedElement}
+        selectedCharacter={selectedCharacter}
+        onSelectCharacter={setSelectedCharacter}
+        sortOption={sortOption}
+        onSelectSort={setSortOption}
+        characterList={characterList}
+        totalFilteredCount={filteredCards.length}
+        onResetFilters={handleResetFilters}
+      />
+
+      {/* Footer (Desktop & Tablet) */}
+      <footer className="border-t border-slate-800/80 bg-slate-950/80 py-6 sm:py-8 text-center text-xs text-slate-400 mb-16 md:mb-0">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="font-display font-black text-amber-400">FATGOATS TCG</span>
             <span>• The Celestial Goat Trading Card Game</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400">
+          <div className="flex items-center gap-4 text-slate-400 text-[11px] sm:text-xs">
             <span>Universal Back: <code className="text-cyan-400">00 - Celestial Goat Card Back.png</code></span>
             <span>36 Playable Cards</span>
           </div>

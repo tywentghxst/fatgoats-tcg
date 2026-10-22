@@ -1,12 +1,11 @@
 import React from 'react';
 import { 
-  Filter, 
   ArrowUpDown, 
   LayoutGrid, 
   Grid3X3, 
   Sparkles, 
-  ShieldAlert, 
-  X
+  X,
+  SlidersHorizontal
 } from 'lucide-react';
 import { SortOption } from '../types';
 
@@ -25,6 +24,7 @@ interface CardFiltersProps {
   totalFilteredCount: number;
   totalCardsCount: number;
   onResetFilters: () => void;
+  onOpenMobileFilters?: () => void;
 }
 
 const RARITIES = ['All', 'Mythic Rare', 'Secret Rare', 'Legendary', 'Ultra Rare', 'Rare', 'Common'];
@@ -61,6 +61,7 @@ export const CardFilters: React.FC<CardFiltersProps> = ({
   totalFilteredCount,
   totalCardsCount,
   onResetFilters,
+  onOpenMobileFilters,
 }) => {
   const hasActiveFilters = 
     selectedRarity !== 'All' || 
@@ -68,9 +69,62 @@ export const CardFilters: React.FC<CardFiltersProps> = ({
     selectedCharacter !== 'All';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 space-y-4">
-      {/* Controls Bar */}
-      <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md flex flex-wrap items-center justify-between gap-4">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mb-4 sm:mb-8 space-y-3">
+      
+      {/* Mobile-Only Quick Filter Bar */}
+      <div className="md:hidden flex items-center justify-between gap-2 p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
+        <button
+          onClick={onOpenMobileFilters}
+          className="flex-1 flex items-center justify-between px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300"
+        >
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="font-medium">Filter & Search</span>
+          </div>
+          {hasActiveFilters && (
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          )}
+        </button>
+
+        {/* View Mode Toggle (Mobile) */}
+        <div className="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800 shrink-0">
+          <button
+            onClick={() => onSelectViewMode('grid')}
+            title="Grid View (2 Cols)"
+            className={`p-1.5 rounded-md transition-all ${
+              viewMode === 'grid'
+                ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                : 'text-slate-400'
+            }`}
+          >
+            <LayoutGrid className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => onSelectViewMode('compact')}
+            title="Compact View (3 Cols)"
+            className={`p-1.5 rounded-md transition-all ${
+              viewMode === 'compact'
+                ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                : 'text-slate-400'
+            }`}
+          >
+            <Grid3X3 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {hasActiveFilters && (
+          <button
+            onClick={onResetFilters}
+            className="p-2 rounded-lg bg-rose-950/60 border border-rose-500/30 text-rose-300"
+            title="Reset Filters"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
+      </div>
+
+      {/* Desktop Controls Bar */}
+      <div className="hidden md:flex p-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md flex-wrap items-center justify-between gap-4">
         
         {/* Left Side: Filter Chips / Selectors */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 flex-1">
@@ -146,7 +200,7 @@ export const CardFilters: React.FC<CardFiltersProps> = ({
           {/* Sorting */}
           <div className="flex items-center gap-1.5 bg-slate-950/70 px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-300">
             <ArrowUpDown className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="text-slate-400 hidden sm:inline">Sort:</span>
+            <span className="text-slate-400">Sort:</span>
             <select
               value={sortOption}
               onChange={(e) => onSelectSort(e.target.value as SortOption)}
