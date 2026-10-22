@@ -1,3 +1,5 @@
+export type ProofType = 'photo' | 'timer' | 'audio' | 'text';
+
 export interface QuestItem {
   id: string;
   cardId: string;
@@ -9,6 +11,9 @@ export interface QuestItem {
   instruction: string;
   loreReason: string;
   xpReward: number;
+  proofType: ProofType;
+  proofPrompt: string;
+  timerDuration?: number; // in seconds
 }
 
 export const FAT_GOATS_QUESTS: QuestItem[] = [
@@ -20,9 +25,11 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     title: 'The Royal Amphibian Leap',
     category: 'Fitness & Action',
     difficulty: 'Easy',
-    instruction: 'Do 10 deep frog jumps in your room or send a frog emoji (🐸) to a group chat with no explanation.',
+    instruction: 'Do 10 deep frog jumps or send a frog emoji (🐸) to a friend without explanation.',
     loreReason: 'Donovan only honors those who know the sacred rhythm of the lilypad.',
     xpReward: 100,
+    proofType: 'photo',
+    proofPrompt: 'Take a photo of your frog jump stance, or a screenshot of the frog emoji text sent to a friend!',
   },
   {
     id: 'q-02',
@@ -32,9 +39,11 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     title: 'The Destiny Shuffle',
     category: 'Mastery',
     difficulty: 'Medium',
-    instruction: 'Shuffle any real deck of cards using a riffle shuffle or one-handed cut, or win any card game match.',
+    instruction: 'Shuffle any real deck of cards using a riffle shuffle or one-handed cut.',
     loreReason: 'The Master of Cards requires proof that your fingers can manipulate fate itself.',
     xpReward: 250,
+    proofType: 'photo',
+    proofPrompt: 'Snap a photo of the shuffled card deck in your hand or table!',
   },
   {
     id: 'q-03',
@@ -47,6 +56,9 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Stretch both arms as wide as you can for 30 seconds and declare loudly: "I WILL BE THE GOAT PIRATE KING!"',
     loreReason: 'The seas of the Grand Herd reward elasticity and boundless pirate ambition.',
     xpReward: 150,
+    proofType: 'timer',
+    timerDuration: 30,
+    proofPrompt: 'Hold your full Gum-Gum stretch pose while the 30-second verification timer counts down!',
   },
   {
     id: 'q-04',
@@ -59,6 +71,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Toast a slice of bread to golden-brown perfection, butter it lavishly, and consume it in honor of the King.',
     loreReason: 'The sovereign throne is maintained by perfectly browned sourdough and regal carbohydrates.',
     xpReward: 300,
+    proofType: 'photo',
+    proofPrompt: 'Upload or snap a photo of your golden-brown toasted bread ready to be eaten!',
   },
   {
     id: 'q-05',
@@ -71,6 +85,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Chug a full 16-ounce glass of cold water without pausing, then whistle or hum your favorite tune.',
     loreReason: 'Cyrus draws his melodic power from pristine oceanic hydration.',
     xpReward: 120,
+    proofType: 'photo',
+    proofPrompt: 'Take a photo of your freshly emptied glass of water!',
   },
   {
     id: 'q-06',
@@ -80,9 +96,11 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     title: 'Silent Umbral Infiltration',
     category: 'Social & Comedy',
     difficulty: 'Medium',
-    instruction: 'Walk across a room in complete silence without making a single floorboard squeak, or sneak up and gently boop a pet or friend.',
+    instruction: 'Walk across a room in complete silence without making a single squeak, or sneak up and gently boop a pet or friend.',
     loreReason: 'A true shadow master leaves neither footprints nor whispers.',
     xpReward: 200,
+    proofType: 'text',
+    proofPrompt: 'Write a brief stealth log: Who was your target and how did you execute the silent boop?',
   },
   {
     id: 'q-07',
@@ -95,6 +113,9 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Sprint as fast as humanly possible across your room, hallway, or yard in under 5 seconds.',
     loreReason: 'If you are too slow, the storm passes you by.',
     xpReward: 220,
+    proofType: 'timer',
+    timerDuration: 5,
+    proofPrompt: 'Start the 5-second countdown timer and sprint across the room before it rings!',
   },
   {
     id: 'q-08',
@@ -107,6 +128,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Give someone an unexpected gift, tip an extra dollar, or pay a genuine compliment that makes someone smile.',
     loreReason: 'Mr. Beast rewards generosity above all other mortal statistics.',
     xpReward: 500,
+    proofType: 'text',
+    proofPrompt: 'Log your generous deed: Describe what you gave or said, and how the person reacted!',
   },
   {
     id: 'q-09',
@@ -119,6 +142,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Flip a coin or card 3 times in a row without dropping it once.',
     loreReason: 'Every grand master begins as an eager rookie with a starter deck.',
     xpReward: 80,
+    proofType: 'photo',
+    proofPrompt: 'Snap a picture of the coin or card you flipped!',
   },
   {
     id: 'q-10',
@@ -129,8 +154,10 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     category: 'Social & Comedy',
     difficulty: 'Easy',
     instruction: 'Strike an over-the-top superhero sentai pose in front of a mirror with total 100% conviction.',
-    loreReason: 'The Toast Ranger draw power from unshakeable theatrical confidence.',
+    loreReason: 'The Toast Rangers draw power from unshakeable theatrical confidence.',
     xpReward: 150,
+    proofType: 'photo',
+    proofPrompt: 'Snap a photo of your epic Toast Ranger battle pose!',
   },
   {
     id: 'q-11',
@@ -143,6 +170,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Give a friend, family member, pet, or giant pillow the biggest, warmest bear hug of all time.',
     loreReason: 'The bond between goat and beast is forged in pure wholesome affection.',
     xpReward: 160,
+    proofType: 'photo',
+    proofPrompt: 'Upload a photo hugging your companion, pet, or giant bear pillow!',
   },
   {
     id: 'q-12',
@@ -155,6 +184,9 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Hold a plank or wall-sit for 45 seconds without breaking form like an ancient oak.',
     loreReason: 'Rupert stands unbroken against the fiercest tempests.',
     xpReward: 220,
+    proofType: 'timer',
+    timerDuration: 45,
+    proofPrompt: 'Hold your plank or wall-sit firm until the 45-second knight timer reaches zero!',
   },
   {
     id: 'q-13',
@@ -164,9 +196,11 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     title: 'Prismatic Origami Flutter',
     category: 'Creativity & Vibe',
     difficulty: 'Medium',
-    instruction: 'Fold a paper airplane or paper butterfly and make it glide gracefully across the room.',
+    instruction: 'Fold a paper airplane or paper butterfly and make it glide across the room.',
     loreReason: 'Camila commands the winds of beauty and chaotic elegance.',
     xpReward: 200,
+    proofType: 'photo',
+    proofPrompt: 'Take a photo of your folded paper flyer or butterfly!',
   },
   {
     id: 'q-14',
@@ -179,6 +213,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Recite a famous magic chant or dramatic movie spell in your deepest, most theatrical sorcerer voice.',
     loreReason: 'The dark sorcery demands vocal gravitas and ancient conviction.',
     xpReward: 350,
+    proofType: 'audio',
+    proofPrompt: 'Press Record and chant your darkest sorcery incantation into the microphone!',
   },
   {
     id: 'q-15',
@@ -191,6 +227,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Brew an espresso, drink a cup of coffee/tea, or do 20 rapid high-knees to simulate instant turbo overdrive.',
     loreReason: 'Sleep is a myth; cold brew is an absolute necessity.',
     xpReward: 180,
+    proofType: 'photo',
+    proofPrompt: 'Snap a photo of your mug of coffee, espresso shot, or energy fuel!',
   },
   {
     id: 'q-16',
@@ -203,6 +241,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Toss a balled-up paper or ping pong ball into a trash can or mug from at least 7 feet away.',
     loreReason: 'Nkosi makes the impossible bank shot look ridiculously easy.',
     xpReward: 240,
+    proofType: 'photo',
+    proofPrompt: 'Take a photo of the ball safely landed inside the cup or trash can!',
   },
   {
     id: 'q-17',
@@ -212,9 +252,11 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     title: 'Noir Detective Monologue',
     category: 'Creativity & Vibe',
     difficulty: 'Easy',
-    instruction: 'Deliver a gritty 2-sentence detective monologue about goats while looking out a rainy or sunny window.',
+    instruction: 'Deliver a gritty 2-sentence detective monologue about goats while looking out a window.',
     loreReason: 'The asphalt of Goat City never sleeps, and neither does Nickolas.',
     xpReward: 170,
+    proofType: 'audio',
+    proofPrompt: 'Press Record and speak your gritty noir detective monologue into the mic!',
   },
   {
     id: 'q-18',
@@ -227,6 +269,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Eat the last chip from a bag without offering it, or make an absurd royal goat bleat in a silly voice.',
     loreReason: 'The crown of mischief belongs only to the unrepentantly bold.',
     xpReward: 400,
+    proofType: 'audio',
+    proofPrompt: 'Record your most obnoxious royal goat bleat (BAAAA!) into the mic!',
   },
   {
     id: 'q-19',
@@ -239,6 +283,9 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Do the robotic dance for 15 seconds while saying "BEEP BOOP PURGE PROTOCOL INITIALIZED".',
     loreReason: 'B.D.L.A.P. requires mechanical calibration before deploying railguns.',
     xpReward: 260,
+    proofType: 'timer',
+    timerDuration: 15,
+    proofPrompt: 'Execute your robot dance while the 15-second system calibration timer runs!',
   },
   {
     id: 'q-20',
@@ -251,6 +298,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Introduce yourself into a TV remote or phone like you are the host of a multi-million-dollar game show.',
     loreReason: 'The ratings are through the roof when Berry grabs the golden mic.',
     xpReward: 180,
+    proofType: 'audio',
+    proofPrompt: 'Record your energetic Prime Time Game Show introduction speech into the mic!',
   },
   {
     id: 'q-21',
@@ -263,6 +312,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Army-crawl across your living room floor under the radar of imaginary enemy drones.',
     loreReason: 'Bravo six, going dark. The pasture is secured.',
     xpReward: 250,
+    proofType: 'photo',
+    proofPrompt: 'Take a photo of your tactical recon position on the floor or in camo gear!',
   },
   {
     id: 'q-22',
@@ -275,6 +326,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Perform three rapid anime hand signs (Tiger, Dragon, Ram) in under 3 seconds.',
     loreReason: 'The rogue shadow blade requires flawless chakra weaving.',
     xpReward: 380,
+    proofType: 'photo',
+    proofPrompt: 'Snap a photo of your ninja hand seal formation!',
   },
   {
     id: 'q-23',
@@ -287,6 +340,9 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Sit cross-legged with your eyes closed in absolute silence for 60 seconds without twitching.',
     loreReason: 'Natural senjutsu chakra can only be gathered by those who become one with nature.',
     xpReward: 420,
+    proofType: 'timer',
+    timerDuration: 60,
+    proofPrompt: 'Maintain absolute stillness and meditation until the 60-second senjutsu timer rings!',
   },
   {
     id: 'q-24',
@@ -299,6 +355,9 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Perform 15 explosive pushups or burpees while channeling pure golden beast chakra.',
     loreReason: 'The sealed beast responds only to overwhelming physical willpower.',
     xpReward: 600,
+    proofType: 'timer',
+    timerDuration: 40,
+    proofPrompt: 'Complete 15 reps of pushups or jumping jacks within the 40-second chakra surge window!',
   },
   {
     id: 'q-25',
@@ -311,6 +370,9 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Balance on one leg with your eyes closed for 30 seconds without putting your foot down.',
     loreReason: 'The sovereign of six paths walks the razor-thin boundary between heaven and earth.',
     xpReward: 777,
+    proofType: 'timer',
+    timerDuration: 30,
+    proofPrompt: 'Balance on one leg with eyes closed until the 30-second celestial countdown finishes!',
   },
   {
     id: 'q-26',
@@ -323,6 +385,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Draw a picture of a ninja goat on any scrap of paper or sticky note.',
     loreReason: 'Even one drawing manifests the spirit of a hundred shadow clones.',
     xpReward: 190,
+    proofType: 'photo',
+    proofPrompt: 'Upload or snap a photo of your goat doodle on paper!',
   },
   {
     id: 'q-27',
@@ -335,6 +399,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Cup your hands at your hip, build up tension, and unleash a full "KAMEHAMEHAAAA!" blast.',
     loreReason: 'Energy flows from the center of the spirit to break all power-level limiters.',
     xpReward: 450,
+    proofType: 'audio',
+    proofPrompt: 'Press Record and yell your most powerful KAMEHAMEHA wave into the microphone!',
   },
   {
     id: 'q-28',
@@ -347,6 +413,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Pick up a pen, pencil, or spoon like a magic wand, swish and flick it, and say "WINGARDIUM LEVIOSA!".',
     loreReason: 'It is Levi-O-sa, not Levio-SA, as Aaron will remind you.',
     xpReward: 160,
+    proofType: 'audio',
+    proofPrompt: 'Record your magic wand incantation: "Wingardium Leviosa!" into the mic!',
   },
   {
     id: 'q-29',
@@ -359,6 +427,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Hold the door open for someone or do a chore for someone in your house without being asked.',
     loreReason: 'A true knight of the Round Pasture serves honor and brotherhood before glory.',
     xpReward: 250,
+    proofType: 'text',
+    proofPrompt: 'Log your chivalric deed: Describe what act of kindness or chore you completed today!',
   },
   {
     id: 'q-30',
@@ -371,6 +441,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Put a clean paper bag or hoodie pulled super tight over your face and say: "I am the hero this pantry deserves."',
     loreReason: 'No one cared who he was until he put on the folded grocery sack.',
     xpReward: 260,
+    proofType: 'photo',
+    proofPrompt: 'Snap a selfie wearing your grocery bag mask or ultra-tight hoodie vigilante disguise!',
   },
   {
     id: 'q-31',
@@ -380,9 +452,11 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     title: 'The Plot Armor Miracle',
     category: 'Social & Comedy',
     difficulty: 'Goat-Tier',
-    instruction: 'Text a friend "I survived today because of your positive vibes" or drink a health smoothie.',
+    instruction: 'Text a friend "I survived today because of your positive vibes" or drink a healthy green smoothie.',
     loreReason: 'Devin must survive at all costs. The herd cannot bear another tragedy.',
     xpReward: 500,
+    proofType: 'photo',
+    proofPrompt: 'Take a screenshot of your positive text message or a photo of your health elixir/smoothie!',
   },
   {
     id: 'q-32',
@@ -395,6 +469,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Pretend to punch a block of wood 10 times with sound effects without hitting anything hard.',
     loreReason: 'Never dig straight down, and always punch your morning wood with gusto.',
     xpReward: 180,
+    proofType: 'audio',
+    proofPrompt: 'Record your rapid block-mining punches and sound effects into the mic!',
   },
   {
     id: 'q-33',
@@ -407,6 +483,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Do a festive 15-second celebratory dance in your room and shout "MAZEL TOV!" at the top of your lungs.',
     loreReason: 'Every victory in the Goat Realm deserves an epic feast and infectious dancing.',
     xpReward: 250,
+    proofType: 'audio',
+    proofPrompt: 'Record your triumphant "MAZEL TOV!" celebratory cheer into the mic!',
   },
   {
     id: 'q-34',
@@ -419,6 +497,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Whistle loudly like you are calling a level 150 tamed Tyrannosaurus Rex to defend your base.',
     loreReason: 'Prehistoric survival requires sharp commands and alpha leadership.',
     xpReward: 350,
+    proofType: 'audio',
+    proofPrompt: 'Record your loud alpha dino command whistle into the microphone!',
   },
   {
     id: 'q-35',
@@ -431,6 +511,8 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Drop a 4-bar rap freestyle about gold chains, mountain tops, and sovereign goats.',
     loreReason: 'Mr. Lean dropped platinum singles before breakfast. Show him you have bars.',
     xpReward: 400,
+    proofType: 'audio',
+    proofPrompt: 'Press Record and lay down your 4-bar rap freestyle into the mic!',
   },
   {
     id: 'q-36',
@@ -443,5 +525,7 @@ export const FAT_GOATS_QUESTS: QuestItem[] = [
     instruction: 'Build a defensive pillow and blanket fortress on your bed or couch that can withstand midnight monsters.',
     loreReason: 'Between the hours of 2 AM and 5 AM, Lord Toaster reigns supreme over the realm of sheets.',
     xpReward: 666,
+    proofType: 'photo',
+    proofPrompt: 'Snap a photo of your magnificent pillow and blanket defensive fortress!',
   },
 ];

@@ -22,7 +22,7 @@ import {
 import { CardItem as CardItemType } from '../types';
 import { FAT_GOATS_QUESTS } from '../data/questsData';
 import { sound } from '../utils/audio';
-import confetti from 'canvas-confetti';
+import { ProofModal } from './ProofModal';
 
 interface CardDetailModalProps {
   card: CardItemType | null;
@@ -49,6 +49,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [mobileTab, setMobileTab] = useState<'card' | 'stats'>('card');
+  const [isProofModalOpen, setIsProofModalOpen] = useState(false);
   const cardViewerRef = useRef<HTMLDivElement>(null);
 
   // Reset flip status & tab when card changes
@@ -299,10 +300,13 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                         className="w-full h-full object-cover select-none pointer-events-none"
                       />
 
-                      {/* Front Specular / Foil Glare */}
+                      {/* Clean White Specular Glare (No colored hue) */}
                       <motion.div
-                        className="absolute inset-0 holo-foil pointer-events-none"
-                        style={{ opacity: glareOpacity }}
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: 'linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.12) 48%, rgba(255, 255, 255, 0.22) 50%, transparent 54%)',
+                          opacity: glareOpacity,
+                        }}
                       />
                     </div>
 
@@ -316,9 +320,12 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                         className="w-full h-full object-cover select-none pointer-events-none"
                       />
 
-                      {/* Back Specular Glare */}
+                      {/* Back Clean Specular Glare */}
                       <motion.div
-                        className="absolute inset-0 holo-foil pointer-events-none opacity-40"
+                        className="absolute inset-0 pointer-events-none opacity-40"
+                        style={{
+                          background: 'linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.1) 48%, rgba(255, 255, 255, 0.2) 50%, transparent 54%)',
+                        }}
                       />
 
                       {/* Back watermark pill */}
@@ -423,25 +430,16 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                   </p>
                   {!isOwned ? (
                     <button
-                      onClick={() => {
-                        sound.playSparkle();
-                        confetti({
-                          particleCount: 100,
-                          spread: 70,
-                          origin: { y: 0.6 },
-                          colors: ['#38bdf8', '#f59e0b', '#ec4899', '#10b981'],
-                        });
-                        onToggleOwned(card.id);
-                      }}
+                      onClick={() => setIsProofModalOpen(true)}
                       className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 active:scale-95 transition"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      <span>I Did It! Claim Card to Binder</span>
+                      <span>Prove Challenge & Unlock Card</span>
                     </button>
                   ) : (
                     <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-semibold">
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>Quest Completed! Card unlocked in your binder.</span>
+                      <span>Quest Verified! Card unlocked in your binder.</span>
                     </div>
                   )}
                 </div>
@@ -602,6 +600,19 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
           </div>
 
         </motion.div>
+
+        {/* Quest Proof Verification Modal */}
+        {isProofModalOpen && cardQuest && (
+          <ProofModal
+            quest={cardQuest}
+            card={card}
+            onClose={() => setIsProofModalOpen(false)}
+            onVerified={() => {
+              onToggleOwned(card.id);
+              setIsProofModalOpen(false);
+            }}
+          />
+        )}
 
       </div>
     </AnimatePresence>

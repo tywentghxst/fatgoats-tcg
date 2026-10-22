@@ -147,10 +147,8 @@ export const CardItem: React.FC<CardItemProps> = ({
         whileHover={{ scale: 1.04, zIndex: 30 }}
         whileTap={{ scale: 0.98 }}
         className={`relative cursor-pointer rounded-xl sm:rounded-2xl ${
-          isOwned ? '' : 'opacity-80 grayscale-[25%]'
-        } ${isHovered ? currentRarity.glow : 'shadow-lg sm:shadow-xl shadow-black/70'} ${
           currentRarity.border
-        } border bg-[#09101d]`}
+        } border bg-[#09101d] ${isHovered ? currentRarity.glow : 'shadow-lg sm:shadow-xl shadow-black/70'}`}
       >
         {/* Inner Card Container with overflow-hidden for rounded artwork */}
         <div 
@@ -164,7 +162,7 @@ export const CardItem: React.FC<CardItemProps> = ({
             </div>
           )}
 
-          {/* Card Artwork */}
+          {/* Card Artwork - 100% Clean, Crisp & Natural */}
           <img
             src={card.thumbUrl || card.imageUrl}
             alt={card.title}
@@ -178,21 +176,14 @@ export const CardItem: React.FC<CardItemProps> = ({
             }`}
           />
 
-          {/* Dynamic Holographic Foil Overlay */}
-          <motion.div
-            className="absolute inset-0 holo-foil pointer-events-none"
-            style={{
-              opacity: isHovered ? glareOpacity : 0.08,
-              backgroundPosition: `${glareX} ${glareY}`,
-            }}
-          />
-
-          {/* Secret/Mythic special specular shimmer */}
-          {(card.rarity === 'Mythic Rare' || card.rarity === 'Secret Rare') && (
-            <div 
-              className={`absolute inset-0 holo-secret pointer-events-none transition-opacity duration-300 ${
-                isHovered ? 'opacity-85' : 'opacity-15'
-              }`}
+          {/* Clean White Specular Glare (Zero weird colored hue) */}
+          {isHovered && (
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.12) 47%, rgba(255, 255, 255, 0.25) 50%, transparent 54%)',
+                opacity: glareOpacity,
+              }}
             />
           )}
 
