@@ -19,10 +19,12 @@ interface NavbarProps {
   onOpenBooster: () => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
-  activeFilter: 'all' | 'owned' | 'unowned' | 'favorite';
-  onFilterChange: (f: 'all' | 'owned' | 'unowned' | 'favorite') => void;
+  activeFilter: 'all' | 'owned' | 'unowned' | 'favorite' | 'new';
+  onFilterChange: (f: 'all' | 'owned' | 'unowned' | 'favorite' | 'new') => void;
   onOpenMobileFilters?: () => void;
   onOpenQuests?: () => void;
+  onOpenNewReveal?: () => void;
+  newCardsCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -37,6 +39,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onFilterChange,
   onOpenMobileFilters,
   onOpenQuests,
+  onOpenNewReveal,
+  newCardsCount = 0,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#060a12]/90 border-b border-cyan-900/30 transition-all">
@@ -137,7 +141,35 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Heart className="w-3.5 h-3.5 fill-current" />
               ({stats.favoriteCount})
             </button>
+            {newCardsCount > 0 && (
+              <button
+                onClick={() => onFilterChange('new')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all ${
+                  activeFilter === 'new'
+                    ? 'bg-amber-400 text-slate-950 font-bold shadow-md shadow-amber-400/20'
+                    : 'text-amber-300 hover:text-amber-100'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 fill-current" />
+                New ({newCardsCount})
+              </button>
+            )}
           </div>
+
+          {/* Celestial Summoning Portal Trigger (New Card Reveal) */}
+          {onOpenNewReveal && newCardsCount > 0 && (
+            <button
+              onClick={onOpenNewReveal}
+              title="Summoning Shrine - Reveal newly added cards!"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white shadow-lg shadow-amber-500/25 active:scale-95 transition-all hover:brightness-110 animate-pulse"
+            >
+              <Sparkles className="w-3.5 h-3.5 fill-current" />
+              <span className="hidden sm:inline">New Drops</span>
+              <span className="bg-black/30 text-white font-mono text-[10px] px-1.5 py-0.2 rounded-full font-black">
+                {newCardsCount}
+              </span>
+            </button>
+          )}
 
           {/* Quests / IRL Challenges Button */}
           {onOpenQuests && (

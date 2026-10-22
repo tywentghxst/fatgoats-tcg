@@ -219,8 +219,8 @@ export const MobileFilterDrawer: React.FC<MobileFilterDrawerProps> = ({
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 {[
-                  { label: 'Card # (01 → 36)', value: 'number-asc' as SortOption },
-                  { label: 'Card # (36 → 01)', value: 'number-desc' as SortOption },
+                  { label: 'Card # (Low → High)', value: 'number-asc' as SortOption },
+                  { label: 'Card # (High → Low)', value: 'number-desc' as SortOption },
                   { label: 'Highest Rarity', value: 'rarity-desc' as SortOption },
                   { label: 'Highest Attack', value: 'power-desc' as SortOption },
                   { label: 'Name (A → Z)', value: 'name-asc' as SortOption },

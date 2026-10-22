@@ -206,8 +206,8 @@ export const CardFilters: React.FC<CardFiltersProps> = ({
               onChange={(e) => onSelectSort(e.target.value as SortOption)}
               className="bg-transparent font-medium text-slate-100 focus:outline-none cursor-pointer"
             >
-              <option value="number-asc" className="bg-slate-900 text-white">Card # (01 → 36)</option>
-              <option value="number-desc" className="bg-slate-900 text-white">Card # (36 → 01)</option>
+              <option value="number-asc" className="bg-slate-900 text-white">Card # (Low → High)</option>
+              <option value="number-desc" className="bg-slate-900 text-white">Card # (High → Low)</option>
               <option value="name-asc" className="bg-slate-900 text-white">Name (A → Z)</option>
               <option value="name-desc" className="bg-slate-900 text-white">Name (Z → A)</option>
               <option value="rarity-desc" className="bg-slate-900 text-white">Highest Rarity</option>

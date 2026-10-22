@@ -11,8 +11,8 @@ import { sound } from '../utils/audio';
 
 interface MobileBottomNavProps {
   stats: CollectionStats;
-  activeFilter: 'all' | 'owned' | 'unowned' | 'favorite';
-  onFilterChange: (f: 'all' | 'owned' | 'unowned' | 'favorite') => void;
+  activeFilter: 'all' | 'owned' | 'unowned' | 'favorite' | 'new';
+  onFilterChange: (f: 'all' | 'owned' | 'unowned' | 'favorite' | 'new') => void;
   onOpenBooster: () => void;
   onOpenMobileFilters: () => void;
   onOpenQuests: () => void;

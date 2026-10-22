@@ -192,10 +192,18 @@ export const CardItem: React.FC<CardItemProps> = ({
             className="absolute top-1.5 sm:top-2.5 left-1.5 sm:left-2.5 right-1.5 sm:right-2.5 flex items-center justify-between pointer-events-none z-10"
             style={{ transform: 'translateZ(15px)' }}
           >
-            {/* Card Number Badge */}
-            <span className="px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg bg-black/85 backdrop-blur-md border border-white/10 text-white font-mono text-[10px] sm:text-[11px] font-bold tracking-wider shadow-md">
-              #{card.cardNumber}
-            </span>
+            {/* Card Number Badge & New Drop Badge */}
+            <div className="flex items-center gap-1">
+              <span className="px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg bg-black/85 backdrop-blur-md border border-white/10 text-white font-mono text-[10px] sm:text-[11px] font-bold tracking-wider shadow-md">
+                #{card.cardNumber}
+              </span>
+              {card.isNew && (
+                <span className="flex items-center gap-1 bg-gradient-to-r from-amber-400 to-rose-500 text-slate-950 font-black text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg shadow-lg shadow-amber-500/30">
+                  <Sparkles className="w-2.5 h-2.5 fill-current" />
+                  NEW
+                </span>
+              )}
+            </div>
 
             {/* Quick Action Buttons (Favorite + Owned) */}
             <div className="flex items-center gap-1 sm:gap-1.5 pointer-events-auto">

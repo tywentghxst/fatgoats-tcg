@@ -35,6 +35,7 @@ export interface CardItem {
   imageUrl: string;
   thumbUrl: string;
   isCardBack?: boolean;
+  isNew?: boolean;
 }
 
 export type SortOption = 'number-asc' | 'number-desc' | 'name-asc' | 'name-desc' | 'rarity-desc' | 'power-desc';
@@ -44,7 +45,7 @@ export interface FilterState {
   rarity: string;
   element: string;
   character: string;
-  ownership: 'all' | 'owned' | 'unowned' | 'favorite';
+  ownership: 'all' | 'owned' | 'unowned' | 'favorite' | 'new';
 }
 
 export interface CollectionStats {

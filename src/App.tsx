@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { INITIAL_CARDS, CARD_BACK_IMAGE } from './data/cardsData';
+import { LATEST_DROP } from './data/newArrivals';
 import { CardItem as CardItemType, CollectionStats, SortOption } from './types';
 import { Navbar } from './components/Navbar';
 import { HeroStats } from './components/HeroStats';
@@ -11,6 +12,7 @@ import { ZipUploaderModal } from './components/ZipUploaderModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { MobileFilterDrawer } from './components/MobileFilterDrawer';
 import { QuestsModal } from './components/QuestsModal';
+import { NewCardRevealModal } from './components/NewCardRevealModal';
 import { sound } from './utils/audio';
 import { SearchX } from 'lucide-react';
 
@@ -59,7 +61,7 @@ export function App() {
   const [selectedElement, setSelectedElement] = useState('All');
   const [selectedCharacter, setSelectedCharacter] = useState('All');
   const [sortOption, setSortOption] = useState<SortOption>('number-asc');
-  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned' | 'unowned' | 'favorite'>('all');
+  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned' | 'unowned' | 'favorite' | 'new'>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'compact' | 'showcase'>('grid');
 
   // Modals
@@ -68,6 +70,7 @@ export function App() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isQuestsOpen, setIsQuestsOpen] = useState(false);
+  const [isRevealOpen, setIsRevealOpen] = useState(false);
 
   // Save to localStorage when owned or favorite sets change
   useEffect(() => {
@@ -155,6 +158,11 @@ export function App() {
     return Array.from(set).sort();
   }, [cards]);
 
+  // Newly added cards from latest drops
+  const newCardsList = useMemo(() => {
+    return cards.filter((c) => c.isNew || LATEST_DROP.cardIds.includes(c.id));
+  }, [cards]);
+
   // Filtered and Sorted Cards
   const filteredCards = useMemo(() => {
     return cards
@@ -163,6 +171,7 @@ export function App() {
         if (ownershipFilter === 'owned' && !ownedCardIds.has(card.id)) return false;
         if (ownershipFilter === 'unowned' && ownedCardIds.has(card.id)) return false;
         if (ownershipFilter === 'favorite' && !favoriteCardIds.has(card.id)) return false;
+        if (ownershipFilter === 'new' && (!card.isNew && !LATEST_DROP.cardIds.includes(card.id))) return false;
 
         // Rarity filter
         if (selectedRarity !== 'All' && card.rarity !== selectedRarity) return false;
@@ -301,6 +310,8 @@ export function App() {
         onFilterChange={setOwnershipFilter}
         onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
         onOpenQuests={() => setIsQuestsOpen(true)}
+        onOpenNewReveal={() => setIsRevealOpen(true)}
+        newCardsCount={newCardsList.length}
       />
 
       {/* Main Container with safe bottom padding for floating mobile dock */}
@@ -313,6 +324,8 @@ export function App() {
           onMarkAllOwned={handleMarkAllOwned}
           onResetOwned={handleResetOwned}
           onOpenQuests={() => setIsQuestsOpen(true)}
+          onOpenNewReveal={() => setIsRevealOpen(true)}
+          newCardsCount={newCardsList.length}
         />
 
         {/* Filter & Sorting Controls */}
@@ -418,7 +431,7 @@ export function App() {
           </div>
           <div className="flex items-center gap-4 text-slate-400 text-[11px] sm:text-xs">
             <span>Universal Back: <code className="text-cyan-400">00 - Celestial Goat Card Back.png</code></span>
-            <span>36 Playable Cards</span>
+            <span>{cards.length} Playable Cards</span>
           </div>
         </div>
       </footer>
@@ -472,6 +485,19 @@ export function App() {
           onInspectCard={(c) => {
             setIsQuestsOpen(false);
             setInspectedCard(c);
+          }}
+        />
+      )}
+
+      {/* Celestial Summoning Shrine (New Card Reveal) */}
+      {isRevealOpen && (
+        <NewCardRevealModal
+          newCards={newCardsList}
+          cardBackUrl={cardBackUrl}
+          onClose={() => setIsRevealOpen(false)}
+          onAddCardsToOwned={handleAddCardsToOwned}
+          onFilterNewInGallery={() => {
+            setOwnershipFilter('new');
           }}
         />
       )}

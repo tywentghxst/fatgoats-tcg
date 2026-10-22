@@ -20,6 +20,8 @@ interface HeroStatsProps {
   onMarkAllOwned: () => void;
   onResetOwned: () => void;
   onOpenQuests?: () => void;
+  onOpenNewReveal?: () => void;
+  newCardsCount?: number;
 }
 
 export const HeroStats: React.FC<HeroStatsProps> = ({
@@ -28,6 +30,8 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
   onMarkAllOwned,
   onResetOwned,
   onOpenQuests,
+  onOpenNewReveal,
+  newCardsCount = 0,
 }) => {
   const [mobileExpanded, setMobileExpanded] = useState(false);
 
@@ -100,6 +104,16 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-1 sm:pt-2">
+                {onOpenNewReveal && newCardsCount > 0 && (
+                  <button
+                    onClick={onOpenNewReveal}
+                    className="flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-black bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white shadow-lg shadow-amber-500/30 hover:brightness-110 active:scale-95 transition-all animate-pulse"
+                  >
+                    <Sparkles className="w-4 h-4 fill-current" />
+                    <span>Summon & Reveal ({newCardsCount} New!)</span>
+                  </button>
+                )}
+
                 {onOpenQuests && (
                   <button
                     onClick={onOpenQuests}

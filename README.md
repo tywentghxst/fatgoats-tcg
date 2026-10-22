@@ -27,16 +27,34 @@ An ultra-modern, high-performance, and visually stunning Trading Card Game web a
 - **Persistent Storage**: Saved in `localStorage`.
 - **Celebration Confetti**: Triggers celebratory confetti upon completing sets or pulling ultra-rare cards.
 
-### 4. Booster Pack Opening Simulator
+### 4. Celestial Summoning Shrine (New Card Reveal Portal)
+- **Cinematic Card Reveal Ritual**: Experience newly dropped cards materializing through a celestial portal with starry ambient vortex, energy charging sound effects, and explosive cosmic confetti bursts.
+- **Interactive 3D Unveiling**: Tap or click each mystery card to flip and discover its attributes, artwork, stats, and lore.
+- **Showcase & Filter**: Inspect all new arrivals together or filter the gallery to view only the latest drop.
+
+### 5. Automated Card Ingestion (`NEW CARDS/` Engine)
+- **Instant Drag-and-Drop Porting**: Whenever new card artwork is created, simply drop images into the `NEW CARDS/` folder.
+- **One-Click Execution**:
+  - Run `npm.cmd run ingest` OR double-click `ingest_new_cards.bat` in Windows.
+  - Automatically converts full-res cards to `public/cards/`.
+  - Automatically generates optimized WebP thumbnails in `public/cards_thumb/`.
+  - Automatically registers new cards and custom IRL quests in `cardsData.ts` and `questsData.ts`.
+  - Safely archives processed images to `NEW CARDS/_archived/` so the folder stays clean for your next drop!
+
+### 6. Booster Pack Opening Simulator
 - **Interactive Booster Packs**: Tear open virtual 5-card booster packs with randomized rarity pulls, sequence reveal animations, and sound effects.
 
-### 5. Dynamic ZIP Ingestion (Zero File-Size Limits)
-- Built-in **JSZip** in-memory client-side decompression.
-- Can ingest any `.zip` archive (57MB, 100MB+) directly in the browser with no chat upload restrictions.
+### 7. IRL Quests & Proof Verification
+- Real-world fitness, comedic, snack, and mastery quests tied to every card with photo proof verification and interactive timers.
 
-### 6. Web Audio API Sound System
+### 8. Dynamic ZIP Ingestion (Zero File-Size Limits)
+- Built-in **JSZip** in-memory client-side decompression for loading cards directly in the browser.
+
+### 9. Web Audio API Sound System
 - Procedurally synthesized sound effects:
   - Card flip whoosh & snap
+  - Cosmic energy charging & reveal blast
+  - Victory fanfare & chimes
   - Foil shimmer chimes
   - Pack tear fanfare
   - Mute/Unmute audio controls

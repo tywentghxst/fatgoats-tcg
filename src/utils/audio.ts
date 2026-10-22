@@ -179,6 +179,125 @@ class SoundSystem {
       // AudioContext fallback
     }
   }
+
+  // Energy build-up sound before card unveiling
+  public playCelestialCharge() {
+    if (!this.enabled) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    try {
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(120, t);
+      osc.frequency.exponentialRampToValueAtTime(740, t + 0.9);
+
+      gain.gain.setValueAtTime(0.01, t);
+      gain.gain.exponentialRampToValueAtTime(0.2, t + 0.8);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.95);
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(300, t);
+      filter.frequency.exponentialRampToValueAtTime(2800, t + 0.9);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(t);
+      osc.stop(t + 0.95);
+    } catch {
+      // AudioContext fallback
+    }
+  }
+
+  // Explosive cosmic reveal blast
+  public playCardRevealBlast() {
+    if (!this.enabled) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    try {
+      const t = this.ctx.currentTime;
+
+      // Deep Sub Boom
+      const boom = this.ctx.createOscillator();
+      const boomGain = this.ctx.createGain();
+      boom.type = 'sine';
+      boom.frequency.setValueAtTime(140, t);
+      boom.frequency.exponentialRampToValueAtTime(35, t + 0.45);
+      boomGain.gain.setValueAtTime(0.4, t);
+      boomGain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      boom.connect(boomGain);
+      boomGain.connect(this.ctx.destination);
+      boom.start(t);
+      boom.stop(t + 0.5);
+
+      // Celestial Shimmer Chords
+      const chords = [523.25, 659.25, 783.99, 1046.5, 1318.51];
+      chords.forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const noteTime = t + idx * 0.035;
+        const noteOsc = this.ctx.createOscillator();
+        const noteGain = this.ctx.createGain();
+
+        noteOsc.type = 'triangle';
+        noteOsc.frequency.setValueAtTime(freq, noteTime);
+
+        noteGain.gain.setValueAtTime(0.18, noteTime);
+        noteGain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.55);
+
+        noteOsc.connect(noteGain);
+        noteGain.connect(this.ctx.destination);
+        noteOsc.start(noteTime);
+        noteOsc.stop(noteTime + 0.55);
+      });
+    } catch {
+      // AudioContext fallback
+    }
+  }
+
+  // Victory / Final Unveil Fanfare
+  public playVictoryFanfare() {
+    if (!this.enabled) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    try {
+      const t = this.ctx.currentTime;
+      const melody = [
+        { f: 523.25, d: 0.12 },
+        { f: 659.25, d: 0.12 },
+        { f: 783.99, d: 0.12 },
+        { f: 1046.5, d: 0.4 },
+      ];
+      let offset = 0;
+      melody.forEach((note) => {
+        if (!this.ctx) return;
+        const startTime = t + offset;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(note.f, startTime);
+
+        gain.gain.setValueAtTime(0.22, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + note.d);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + note.d);
+        offset += note.d * 0.85;
+      });
+    } catch {
+      // AudioContext fallback
+    }
+  }
 }
 
 export const sound = new SoundSystem();
