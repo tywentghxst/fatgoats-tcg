@@ -160,12 +160,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           {onOpenNewReveal && newCardsCount > 0 && (
             <button
               onClick={onOpenNewReveal}
-              title="Summoning Shrine - Reveal newly added cards!"
-              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-bold bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white shadow-lg shadow-amber-500/25 active:scale-95 transition-all hover:brightness-110 animate-pulse"
+              title="Celestial Summoning Shrine - Reveal newly added cards!"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-bold bg-gradient-to-r from-amber-400 via-rose-500 to-purple-600 text-white shadow-lg shadow-amber-500/25 active:scale-95 transition-all hover:brightness-110 animate-pulse"
             >
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              <span className="hidden sm:inline">New Drops</span>
-              <span className="bg-black/30 text-white font-mono text-[10px] px-1.5 py-0.2 rounded-full font-black">
+              <Sparkles className="w-3.5 h-3.5 fill-current text-amber-200" />
+              <span className="hidden sm:inline">Celestial Summoning</span>
+              <span className="sm:hidden">Summon</span>
+              <span className="bg-black/35 text-amber-200 font-mono text-[10px] px-1.5 py-0.2 rounded-full font-black">
                 {newCardsCount}
               </span>
             </button>

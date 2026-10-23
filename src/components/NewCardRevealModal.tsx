@@ -256,45 +256,45 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#03060f_90%)]" />
       </div>
 
-      {/* Modal Dialog Card Container - Uses dynamic viewport height so controls are NEVER pushed off screen! */}
+      {/* Modal Dialog Card Container - Perfectly scaled for desktop & mobile */}
       <motion.div
         initial={{ opacity: 0, scale: 0.94, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.94, y: 10 }}
         transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-        className="relative z-10 w-full max-w-[96vw] sm:max-w-xl md:max-w-4xl bg-slate-900/95 border border-amber-500/35 rounded-2xl sm:rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.25)] p-2.5 sm:p-6 flex flex-col justify-between my-auto h-[90dvh] sm:h-auto max-h-[92dvh] sm:max-h-[94vh] overflow-hidden overscroll-contain"
+        className="relative z-10 w-full max-w-[96vw] sm:max-w-2xl md:max-w-4xl lg:max-w-5xl bg-slate-900/95 border border-amber-500/35 rounded-2xl sm:rounded-3xl shadow-[0_0_60px_rgba(245,158,11,0.25)] p-3 sm:p-6 md:p-7 flex flex-col justify-between my-auto h-[90dvh] md:h-[620px] lg:h-[660px] max-h-[92dvh] md:max-h-[88vh] overflow-hidden overscroll-contain"
       >
         {/* Streamlined Top Bar */}
-        <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-1.5 shrink-0">
-          <div className="flex items-center gap-1.5">
-            <span className="p-1 rounded-lg bg-gradient-to-br from-amber-500/25 to-cyan-500/25 border border-amber-400/40 text-amber-300">
-              <Sparkles className="w-3.5 h-3.5 fill-current animate-spin" style={{ animationDuration: '8s' }} />
+        <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 sm:pb-3 mb-1.5 sm:mb-3 shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="p-1 sm:p-1.5 rounded-lg bg-gradient-to-br from-amber-500/25 to-cyan-500/25 border border-amber-400/40 text-amber-300">
+              <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 fill-current animate-spin" style={{ animationDuration: '8s' }} />
             </span>
-            <div className="flex items-center gap-1.5">
-              <h2 className="font-display font-black text-xs sm:text-base text-white tracking-wide">
+            <div className="flex items-center gap-2">
+              <h2 className="font-display font-black text-xs sm:text-base md:text-lg text-white tracking-wide">
                 CELESTIAL SUMMONING
               </h2>
-              <span className="bg-amber-400/20 border border-amber-400/50 text-amber-300 text-[9px] font-mono px-1.5 py-0.2 rounded-full uppercase">
+              <span className="bg-amber-400/20 border border-amber-400/50 text-amber-300 text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full uppercase font-bold">
                 New Drops
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 sm:gap-2">
             {!isComplete && (
               <button
                 onClick={handleRevealAll}
                 title="Instantly reveal all remaining cards"
-                className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-[10px] sm:text-xs font-semibold hover:bg-cyan-900 transition active:scale-95"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-[10px] sm:text-xs font-semibold hover:bg-cyan-900 transition active:scale-95 shadow-sm"
               >
-                <FastForward className="w-3 h-3" />
-                <span>Fast Reveal</span>
+                <FastForward className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
+                <span>Fast Reveal All</span>
               </button>
             )}
 
             <button
               onClick={onClose}
-              className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition active:scale-90"
+              className="p-1 sm:p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition active:scale-90"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -340,11 +340,11 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
               </div>
             </div>
 
-            {/* Central Unveil Arena - Maximizes vertical space for big card display */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-6 items-center flex-1 min-h-0 relative">
+            {/* Central Unveil Arena - Balanced 5:7 grid on desktop for spacious art & stats */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-6 items-center flex-1 min-h-0 relative">
               
-              {/* Left/Center: The Floating 3D Card Artifact (Scaled dynamically to fit screen!) */}
-              <div className="md:col-span-6 flex flex-col items-center justify-center flex-1 min-h-0 py-0.5 relative w-full">
+              {/* Left/Center: The Floating 3D Card Artifact (Crisp and fully visible on both desktop & mobile!) */}
+              <div className="md:col-span-5 flex flex-col items-center justify-center flex-1 min-h-0 py-1 relative w-full">
                 {/* Floating Navigation Chevrons on Mobile Beside Card */}
                 <div className="md:hidden absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-0.5 pointer-events-none z-20">
                   <button
@@ -447,7 +447,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                       duration: isCharging ? 0.2 : 3.2,
                       ease: 'easeInOut',
                     }}
-                    className="h-[38dvh] xs:h-[42dvh] sm:h-auto sm:max-h-[58dvh] max-h-[420px] aspect-[1/1.4] w-auto max-w-[min(72vw,310px)] rounded-2xl relative shadow-2xl"
+                    className="w-auto h-[38dvh] xs:h-[42dvh] max-h-[380px] max-w-[min(72vw,280px)] sm:w-[270px] sm:h-[378px] md:w-[300px] md:h-[420px] lg:w-[320px] lg:h-[448px] aspect-[1/1.4] rounded-2xl relative shadow-2xl shrink-0"
                   >
                     {/* Flipping 3D Inner Wrapper */}
                     <motion.div
@@ -551,7 +551,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
               </div>
 
               {/* DESKTOP ONLY: Side-by-side Walkout Attributes & Lore */}
-              <div className="hidden md:flex md:col-span-6 flex-col justify-between h-full space-y-3">
+              <div className="hidden md:flex md:col-span-7 flex-col justify-between h-full space-y-3 pl-2 lg:pl-4">
                 <AnimatePresence mode="wait">
                   {isCurrentRevealed ? (
                     <motion.div
@@ -654,33 +654,65 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-semibold">
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        <span>Registered to your personal binder!</span>
+                      {/* Desktop Bottom Registration & Flip Row */}
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                        <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-semibold">
+                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                          <span>Registered to your personal binder!</span>
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            sound.playCardFlip();
+                            setIsFlippedManual(!isFlippedManual);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 hover:text-white transition active:scale-95 shadow-sm"
+                        >
+                          <RotateCw className="w-3.5 h-3.5 text-cyan-400" />
+                          <span>{isFlippedManual ? 'Show Front' : 'Flip to Back'}</span>
+                        </button>
                       </div>
                     </motion.div>
                   ) : (
                     /* UNREVEALED MYSTERY STATE */
-                    <div className="py-6 space-y-3">
-                      <div className="inline-block p-2.5 rounded-2xl bg-amber-400/10 border border-amber-400/25 text-amber-300">
-                        <Sparkles className="w-6 h-6 animate-pulse" />
+                    <div className="py-6 sm:py-8 space-y-4 flex flex-col justify-center items-start">
+                      <div className="inline-block p-3 rounded-2xl bg-amber-400/10 border border-amber-400/25 text-amber-300">
+                        <Sparkles className="w-7 h-7 animate-pulse" />
                       </div>
-                      <h3 className="font-display font-black text-xl text-white">
-                        Cosmic Relic #{currentCard.cardNumber}
-                      </h3>
-                      <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
+                      <div>
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-mono text-xs uppercase mb-2">
+                          ✦ Cosmic Artifact #{currentCard.cardNumber}
+                        </div>
+                        <h3 className="font-display font-black text-2xl lg:text-3xl text-white">
+                          Unveil Mystery Drop
+                        </h3>
+                      </div>
+                      <p className="text-xs sm:text-sm text-slate-300 max-w-md leading-relaxed">
                         A newly imported celestial card is pulsing with raw energy from the cosmos.
-                        Break the astral seal to trigger the walkout reveal and claim it!
+                        Break the astral seal to trigger the full 3D walkout reveal and register it to your collection binder!
                       </p>
 
-                      <button
-                        onClick={handleUnveilCurrent}
-                        disabled={isCharging}
-                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:brightness-110 text-slate-950 font-display font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition flex items-center justify-center gap-2"
-                      >
-                        <Sparkles className="w-4 h-4 fill-current" />
-                        {isCharging ? 'Unleashing Power...' : 'Unveil Card Now'}
-                      </button>
+                      <div className="pt-2 flex items-center gap-3">
+                        <button
+                          onClick={handleUnveilCurrent}
+                          disabled={isCharging}
+                          className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:brightness-110 text-slate-950 font-display font-black text-sm uppercase tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition flex items-center justify-center gap-2"
+                        >
+                          <Sparkles className="w-4 h-4 fill-current" />
+                          <span>{isCharging ? 'Unleashing Power...' : 'Unveil Card Now'}</span>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            sound.playCardFlip();
+                            setIsFlippedManual(!isFlippedManual);
+                          }}
+                          className="px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition flex items-center gap-1.5"
+                        >
+                          <RotateCw className="w-3.5 h-3.5 text-cyan-400" />
+                          <span>Inspect Back</span>
+                        </button>
+                      </div>
                     </div>
                   )}
                 </AnimatePresence>
@@ -689,11 +721,11 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
             </div>
 
             {/* Bottom Primary Controls (Pinned to Bottom, Highly Accessible!) */}
-            <div className="flex items-center justify-between border-t border-slate-800/80 pt-2 mt-auto shrink-0 bg-slate-900/95 z-30 pb-0.5">
+            <div className="flex items-center justify-between border-t border-slate-800/80 pt-2.5 sm:pt-3 mt-auto shrink-0 bg-slate-900/95 z-30 pb-0.5">
               <button
                 onClick={handlePrev}
                 disabled={currentIndex === 0}
-                className="px-3.5 py-2.5 rounded-xl border border-slate-800 bg-slate-950/80 text-slate-300 hover:text-white disabled:opacity-20 text-xs font-bold transition flex items-center gap-1 active:scale-95"
+                className="px-3.5 sm:px-5 py-2.5 rounded-xl border border-slate-800 bg-slate-950/80 text-slate-300 hover:text-white disabled:opacity-20 text-xs sm:text-sm font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Prev</span>
@@ -704,7 +736,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                 currentIndex < newCards.length - 1 ? (
                   <button
                     onClick={handleNext}
-                    className="flex-1 ml-2.5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition flex items-center justify-center gap-1.5"
+                    className="flex-1 ml-2.5 sm:ml-4 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition flex items-center justify-center gap-2"
                   >
                     <span>NEXT CARD ({currentIndex + 2}/{newCards.length})</span>
                     <ChevronRight className="w-4 h-4 stroke-[3]" />
@@ -712,7 +744,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                 ) : (
                   <button
                     onClick={() => setIsComplete(true)}
-                    className="flex-1 ml-2.5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-emerald-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 active:scale-95 transition flex items-center justify-center gap-1.5"
+                    className="flex-1 ml-2.5 sm:ml-4 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-emerald-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 active:scale-95 transition flex items-center justify-center gap-2"
                   >
                     <span>FINISH & VIEW ALL</span>
                     <Check className="w-4 h-4 stroke-[3]" />
@@ -722,7 +754,7 @@ export const NewCardRevealModal: React.FC<NewCardRevealModalProps> = ({
                 <button
                   onClick={handleUnveilCurrent}
                   disabled={isCharging}
-                  className="flex-1 ml-2.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition flex items-center justify-center gap-1.5"
+                  className="flex-1 ml-2.5 sm:ml-4 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition flex items-center justify-center gap-2"
                 >
                   <Sparkles className="w-4 h-4 fill-current" />
                   <span>{isCharging ? 'Summoning...' : 'Unveil Card Now'}</span>
