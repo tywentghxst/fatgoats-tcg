@@ -22,7 +22,6 @@ interface NavbarProps {
   activeFilter: 'all' | 'owned' | 'unowned' | 'favorite' | 'new';
   onFilterChange: (f: 'all' | 'owned' | 'unowned' | 'favorite' | 'new') => void;
   onOpenMobileFilters?: () => void;
-  onOpenQuests?: () => void;
   onOpenNewReveal?: () => void;
   newCardsCount?: number;
 }
@@ -38,7 +37,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeFilter,
   onFilterChange,
   onOpenMobileFilters,
-  onOpenQuests,
   onOpenNewReveal,
   newCardsCount = 0,
 }) => {
@@ -169,18 +167,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="bg-black/35 text-amber-200 font-mono text-[10px] px-1.5 py-0.2 rounded-full font-black">
                 {newCardsCount}
               </span>
-            </button>
-          )}
-
-          {/* Quests / IRL Challenges Button (Desktop only; on mobile it's in bottom dock) */}
-          {onOpenQuests && (
-            <button
-              onClick={onOpenQuests}
-              title="Goat Quests & IRL Challenges"
-              className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-amber-950/70 border border-amber-500/40 text-amber-300 hover:bg-amber-900/60 active:scale-95 transition-all shadow-sm"
-            >
-              <span className="text-sm">🎯</span>
-              <span>IRL Quests</span>
             </button>
           )}
 

@@ -11,7 +11,6 @@ import { BoosterPackModal } from './components/BoosterPackModal';
 import { ZipUploaderModal } from './components/ZipUploaderModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { MobileFilterDrawer } from './components/MobileFilterDrawer';
-import { QuestsModal } from './components/QuestsModal';
 import { NewCardRevealModal } from './components/NewCardRevealModal';
 import { sound } from './utils/audio';
 import { useBodyScrollLock } from './hooks/useBodyScrollLock';
@@ -70,7 +69,6 @@ export function App() {
   const [isBoosterOpen, setIsBoosterOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [isQuestsOpen, setIsQuestsOpen] = useState(false);
   const [isRevealOpen, setIsRevealOpen] = useState(false);
 
   // Lock background body scroll whenever any modal, drawer, or menu is open
@@ -79,7 +77,6 @@ export function App() {
     isBoosterOpen ||
     isUploadOpen ||
     isMobileFilterOpen ||
-    isQuestsOpen ||
     isRevealOpen
   );
   useBodyScrollLock(isAnyModalOpen);
@@ -321,7 +318,6 @@ export function App() {
         activeFilter={ownershipFilter}
         onFilterChange={setOwnershipFilter}
         onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
-        onOpenQuests={() => setIsQuestsOpen(true)}
         onOpenNewReveal={() => setIsRevealOpen(true)}
         newCardsCount={newCardsList.length}
       />
@@ -335,7 +331,6 @@ export function App() {
           onRandomCard={handleRandomCard}
           onMarkAllOwned={handleMarkAllOwned}
           onResetOwned={handleResetOwned}
-          onOpenQuests={() => setIsQuestsOpen(true)}
           onOpenNewReveal={() => setIsRevealOpen(true)}
           newCardsCount={newCardsList.length}
         />
@@ -411,7 +406,6 @@ export function App() {
         onFilterChange={setOwnershipFilter}
         onOpenBooster={() => setIsBoosterOpen(true)}
         onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
-        onOpenQuests={() => setIsQuestsOpen(true)}
         hasActiveFilters={hasActiveFilters}
       />
 
@@ -482,22 +476,6 @@ export function App() {
         <ZipUploaderModal
           onClose={() => setIsUploadOpen(false)}
           onApplyNewCards={handleApplyNewCards}
-        />
-      )}
-
-      {/* Goat Quests & IRL Challenges Hub */}
-      {isQuestsOpen && (
-        <QuestsModal
-          allCards={cards}
-          ownedCardIds={ownedCardIds}
-          onClose={() => setIsQuestsOpen(false)}
-          onClaimCard={(cardId) => {
-            handleToggleOwned(cardId);
-          }}
-          onInspectCard={(c) => {
-            setIsQuestsOpen(false);
-            setInspectedCard(c);
-          }}
         />
       )}
 

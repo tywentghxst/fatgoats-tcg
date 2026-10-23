@@ -19,7 +19,6 @@ interface HeroStatsProps {
   onRandomCard: () => void;
   onMarkAllOwned: () => void;
   onResetOwned: () => void;
-  onOpenQuests?: () => void;
   onOpenNewReveal?: () => void;
   newCardsCount?: number;
 }
@@ -29,7 +28,6 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
   onRandomCard,
   onMarkAllOwned,
   onResetOwned,
-  onOpenQuests,
   onOpenNewReveal,
   newCardsCount = 0,
 }) => {
@@ -102,27 +100,16 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
               </button>
             )}
 
-            <div className="flex items-center gap-2">
-              {onOpenQuests && (
-                <button
-                  onClick={onOpenQuests}
-                  className="flex-1 py-1.5 px-3 rounded-lg text-xs font-bold bg-amber-950/70 border border-amber-500/40 text-amber-300 flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
-                >
-                  <span>🎯</span>
-                  <span>Goat Quests</span>
-                </button>
-              )}
-              <button
-                onClick={() => {
-                  sound.playCardFlip();
-                  onRandomCard();
-                }}
-                className="flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
-              >
-                <Shuffle className="w-3.5 h-3.5" />
-                <span>Random</span>
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                sound.playCardFlip();
+                onRandomCard();
+              }}
+              className="w-full py-2 px-3 rounded-lg text-xs font-semibold bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition"
+            >
+              <Shuffle className="w-3.5 h-3.5" />
+              <span>Inspect Random Card</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-center">
@@ -151,16 +138,6 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
                   >
                     <Sparkles className="w-4 h-4 fill-current" />
                     <span>Summon & Reveal ({newCardsCount} New!)</span>
-                  </button>
-                )}
-
-                {onOpenQuests && (
-                  <button
-                    onClick={onOpenQuests}
-                    className="flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/25 active:scale-95 transition-all"
-                  >
-                    <span>🎯</span>
-                    <span>IRL Quests to Unlock</span>
                   </button>
                 )}
 

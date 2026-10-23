@@ -16,13 +16,10 @@ import {
   Gauge, 
   Compass,
   Smartphone,
-  BookOpen,
-  Target
+  BookOpen
 } from 'lucide-react';
 import { CardItem as CardItemType } from '../types';
-import { FAT_GOATS_QUESTS } from '../data/questsData';
 import { sound } from '../utils/audio';
-import { ProofModal } from './ProofModal';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface CardDetailModalProps {
@@ -50,7 +47,6 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [mobileTab, setMobileTab] = useState<'card' | 'stats'>('card');
-  const [isProofModalOpen, setIsProofModalOpen] = useState(false);
   const cardViewerRef = useRef<HTMLDivElement>(null);
 
   // Lock background body scroll
@@ -148,11 +144,6 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   };
 
   if (!card) return null;
-
-  // Find quest associated with this card
-  const cardQuest = FAT_GOATS_QUESTS.find(
-    (q) => q.cardId === card.id || q.cardNumber === card.cardNumber
-  );
 
   return (
     <AnimatePresence>
@@ -435,38 +426,6 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                 </p>
               </div>
 
-              {/* 🎯 IRL Quest Challenge Box */}
-              {cardQuest && (
-                <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-amber-950/70 border border-amber-500/40 shadow-lg">
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300 uppercase tracking-wider">
-                      <Target className="w-4 h-4 text-amber-400" />
-                      <span>IRL Challenge: {cardQuest.title}</span>
-                    </div>
-                    <span className="text-[10px] font-mono text-cyan-300 bg-black/60 px-2 py-0.5 rounded-full border border-cyan-500/30">
-                      +{cardQuest.xpReward} XP
-                    </span>
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-100 font-medium mb-2 leading-relaxed">
-                    "{cardQuest.instruction}"
-                  </p>
-                  {!isOwned ? (
-                    <button
-                      onClick={() => setIsProofModalOpen(true)}
-                      className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 active:scale-95 transition"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>Prove Challenge & Unlock Card</span>
-                    </button>
-                  ) : (
-                    <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-semibold">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Quest Verified! Card unlocked in your binder.</span>
-                    </div>
-                  )}
-                </div>
-              )}
-
               {/* Flavor Text Callout Box */}
               <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-900/90 to-[#0c1626]/90 border border-cyan-500/20 italic text-slate-300 text-xs sm:text-sm leading-relaxed">
                 <p>{card.flavorText}</p>
@@ -622,19 +581,6 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
           </div>
 
         </motion.div>
-
-        {/* Quest Proof Verification Modal */}
-        {isProofModalOpen && cardQuest && (
-          <ProofModal
-            quest={cardQuest}
-            card={card}
-            onClose={() => setIsProofModalOpen(false)}
-            onVerified={() => {
-              onToggleOwned(card.id);
-              setIsProofModalOpen(false);
-            }}
-          />
-        )}
 
       </div>
     </AnimatePresence>

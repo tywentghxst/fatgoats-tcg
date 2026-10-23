@@ -4,7 +4,7 @@ import {
   PackageOpen, 
   CheckCircle2, 
   SlidersHorizontal,
-  Target
+  Heart
 } from 'lucide-react';
 import { CollectionStats } from '../types';
 import { sound } from '../utils/audio';
@@ -15,7 +15,6 @@ interface MobileBottomNavProps {
   onFilterChange: (f: 'all' | 'owned' | 'unowned' | 'favorite' | 'new') => void;
   onOpenBooster: () => void;
   onOpenMobileFilters: () => void;
-  onOpenQuests: () => void;
   hasActiveFilters: boolean;
 }
 
@@ -25,7 +24,6 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   onFilterChange,
   onOpenBooster,
   onOpenMobileFilters,
-  onOpenQuests,
   hasActiveFilters,
 }) => {
   return (
@@ -92,16 +90,27 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           </span>
         </button>
 
-        {/* IRL Quests / Challenges Hub */}
+        {/* Saved / Favorites */}
         <button
           onClick={() => {
             sound.playCardHover();
-            onOpenQuests();
+            onFilterChange('favorite');
           }}
-          className="relative flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-amber-400 hover:text-amber-300 transition-all"
+          className={`relative flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all ${
+            activeFilter === 'favorite'
+              ? 'text-pink-400 font-bold scale-105'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
         >
-          <Target className="w-5 h-5 mb-0.5" />
-          <span className="text-[10px] tracking-tight font-medium">Quests</span>
+          <div className="relative">
+            <Heart className={`w-5 h-5 mb-0.5 ${activeFilter === 'favorite' ? 'fill-pink-400' : ''}`} />
+            {stats.favoriteCount > 0 && (
+              <span className="absolute -top-1 -right-2 px-1 py-0.2 bg-pink-500 text-white font-mono text-[9px] font-black rounded-full min-w-4 text-center">
+                {stats.favoriteCount}
+              </span>
+            )}
+          </div>
+          <span className="text-[10px] tracking-tight">Saved</span>
         </button>
 
         {/* Filter & Search Drawer Trigger */}
