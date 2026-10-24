@@ -742,8 +742,7 @@ export const INITIAL_CARDS: CardItem[] = [
     "flavorText": "\"You're toast, I'm crackers! Bow before the golden baked monarch.\"",
     "artistCredit": "FatGoats Studio",
     "imageUrl": "/cards/37 - Jacob The Ritz Cracker.png",
-    "thumbUrl": "/cards_thumb/37 - Jacob The Ritz Cracker.webp",
-    "isNew": true
+    "thumbUrl": "/cards_thumb/37 - Jacob The Ritz Cracker.webp"
   },
   {
     "id": "fg-38",
@@ -763,8 +762,7 @@ export const INITIAL_CARDS: CardItem[] = [
     "flavorText": "\"All hail the king of scrap! The surface world belongs to mortals, but the undercity bows to me.\"",
     "artistCredit": "FatGoats Studio",
     "imageUrl": "/cards/38 - Devin The Rat King.png",
-    "thumbUrl": "/cards_thumb/38 - Devin The Rat King.webp",
-    "isNew": true
+    "thumbUrl": "/cards_thumb/38 - Devin The Rat King.webp"
   },
   {
     "id": "fg-39",
@@ -784,8 +782,7 @@ export const INITIAL_CARDS: CardItem[] = [
     "flavorText": "\"Bow to the buttery king! Thy crackers shall be promised, salted, and crowned in glorious majesty.\"",
     "artistCredit": "FatGoats Studio",
     "imageUrl": "/cards/39 - King Ritz Promise Thy Crackers.png",
-    "thumbUrl": "/cards_thumb/39 - King Ritz Promise Thy Crackers.webp",
-    "isNew": true
+    "thumbUrl": "/cards_thumb/39 - King Ritz Promise Thy Crackers.webp"
   },
   {
     "id": "fg-40",
@@ -805,8 +802,7 @@ export const INITIAL_CARDS: CardItem[] = [
     "flavorText": "\"Youthful night shadow... By the moonlight, the Stealth Lee Clan strikes before a single leaf touches the earth.\"",
     "artistCredit": "FatGoats Studio",
     "imageUrl": "/cards/40 - Stealth Leader of the Stealth Lee Clan.png",
-    "thumbUrl": "/cards_thumb/40 - Stealth Leader of the Stealth Lee Clan.webp",
-    "isNew": true
+    "thumbUrl": "/cards_thumb/40 - Stealth Leader of the Stealth Lee Clan.webp"
   },
   {
     "id": "fg-41",
@@ -826,8 +822,7 @@ export const INITIAL_CARDS: CardItem[] = [
     "flavorText": "\"That time I became a portal... Do you have the key?! Knock three times if you seek the forbidden goat realm.\"",
     "artistCredit": "FatGoats Studio",
     "imageUrl": "/cards/41 - Yungdoor Reincarnated as a Door.png",
-    "thumbUrl": "/cards_thumb/41 - Yungdoor Reincarnated as a Door.webp",
-    "isNew": true
+    "thumbUrl": "/cards_thumb/41 - Yungdoor Reincarnated as a Door.webp"
   },
   {
     "id": "fg-42",
@@ -847,7 +842,111 @@ export const INITIAL_CARDS: CardItem[] = [
     "flavorText": "\"Unmatched brotherhood, unbreakable bonds! When the squad stands as one, no force in the cosmos can stop us.\"",
     "artistCredit": "FatGoats Studio",
     "imageUrl": "/cards/42 - The FatGoats Unmatched Brotherhood.png",
-    "thumbUrl": "/cards_thumb/42 - The FatGoats Unmatched Brotherhood.webp",
+    "thumbUrl": "/cards_thumb/42 - The FatGoats Unmatched Brotherhood.webp"
+  },
+  {
+    "id": "fg-43",
+    "cardNumber": "43",
+    "fileName": "43 - High On Stealth.png",
+    "title": "High On Stealth",
+    "subtitle": "The Ultimate Stealth Relaxer",
+    "character": "Stealth",
+    "rarity": "Legendary",
+    "element": "Wind",
+    "hp": 2200,
+    "attack": 1500,
+    "defense": 1800,
+    "speed": 1300,
+    "abilityName": "Chill Shinobi Slumber",
+    "abilityDesc": "Enters a tranquil state of undisturbed ninja relaxation. Completely evades incoming attacks and negative status effects.",
+    "flavorText": "\"Who needs youth when you have stealth? Kick your feet up and let the world stress itself out.\"",
+    "artistCredit": "FatGoats Studio",
+    "imageUrl": "/cards/43 - High On Stealth.png",
+    "thumbUrl": "/cards_thumb/43 - High On Stealth.webp",
+    "isNew": true
+  },
+  {
+    "id": "fg-44",
+    "cardNumber": "44",
+    "fileName": "44 - Devin's The Pre-Game (The Boot).png",
+    "title": "Devin's The Pre-Game",
+    "subtitle": "Before the Wild Night (The Boot)",
+    "character": "Devin",
+    "rarity": "Legendary",
+    "element": "Chaos",
+    "hp": 1500,
+    "attack": 1200,
+    "defense": 1100,
+    "speed": 1400,
+    "abilityName": "The Boot Chug Overdrive",
+    "abilityDesc": "Downs the entire oversized boot before the night even begins. Boosts team attack by 500 for 3 turns before extreme regret triggers.",
+    "flavorText": "\"I think... I finished the whole boot... Tonight is gonna be legendary!\"",
+    "artistCredit": "FatGoats Studio",
+    "imageUrl": "/cards/44 - Devin's The Pre-Game (The Boot).png",
+    "thumbUrl": "/cards_thumb/44 - Devin's The Pre-Game (The Boot).webp",
+    "isNew": true
+  },
+  {
+    "id": "fg-45",
+    "cardNumber": "45",
+    "fileName": "45 - Devin's The Pre-Game (Couch Chill).png",
+    "title": "Devin's The Pre-Game",
+    "subtitle": "Before the Wild Night (Couch Chill)",
+    "character": "Devin",
+    "rarity": "Legendary",
+    "element": "Earth",
+    "hp": 1500,
+    "attack": 1200,
+    "defense": 1600,
+    "speed": 800,
+    "abilityName": "Unshakable Couch Gravitas",
+    "abilityDesc": "Fuses into the sofa cushions with absolute chill vibes. Grants total immunity to knockback, forced relocation, and early exits.",
+    "flavorText": "\"It's about to be a good night... just let me sink into this couch for five more minutes.\"",
+    "artistCredit": "FatGoats Studio",
+    "imageUrl": "/cards/45 - Devin's The Pre-Game (Couch Chill).png",
+    "thumbUrl": "/cards_thumb/45 - Devin's The Pre-Game (Couch Chill).webp",
+    "isNew": true
+  },
+  {
+    "id": "fg-46",
+    "cardNumber": "46",
+    "fileName": "46 - Devin The Over-Indulged.png",
+    "title": "Devin The Over-Indulged",
+    "subtitle": "Victim of the Party Night",
+    "character": "Devin",
+    "rarity": "Legendary",
+    "element": "Dark",
+    "hp": 500,
+    "attack": 50,
+    "defense": 300,
+    "speed": 100,
+    "abilityName": "The Never Again Vow",
+    "abilityDesc": "Hugs the porcelain throne and solemnly swears off all beverages forever. Reflects emotional damage onto any friend who brought the boot.",
+    "flavorText": "\"Never drinking again... I regret everything... Someone please turn off the sun.\"",
+    "artistCredit": "FatGoats Studio",
+    "imageUrl": "/cards/46 - Devin The Over-Indulged.png",
+    "thumbUrl": "/cards_thumb/46 - Devin The Over-Indulged.webp",
+    "isNew": true
+  },
+  {
+    "id": "fg-47",
+    "cardNumber": "47",
+    "fileName": "47 - Nick's Cameraman Chronicles.png",
+    "title": "Nick's Cameraman Chronicles",
+    "subtitle": "Documenting the Party Saga",
+    "character": "Nick",
+    "rarity": "Legendary",
+    "element": "Lightning",
+    "hp": 1800,
+    "attack": 900,
+    "defense": 1700,
+    "speed": 2000,
+    "abilityName": "4K Viral Evidence Reel",
+    "abilityDesc": "Records the saga across three chapters: 8:00 PM (The Boot), 11:30 PM (Couch Chill), and 1:30 AM (Over-Indulged). Uploads viral proof that stuns opponents.",
+    "flavorText": "\"We going viral on this ish! Hold that pose, history needs to witness this party saga.\"",
+    "artistCredit": "FatGoats Studio",
+    "imageUrl": "/cards/47 - Nick's Cameraman Chronicles.png",
+    "thumbUrl": "/cards_thumb/47 - Nick's Cameraman Chronicles.webp",
     "isNew": true
   }
 ];

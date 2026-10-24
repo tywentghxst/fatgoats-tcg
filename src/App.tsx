@@ -449,6 +449,7 @@ export function App() {
           cardBackUrl={cardBackUrl}
           isOwned={ownedCardIds.has(inspectedCard.id)}
           isFavorite={favoriteCardIds.has(inspectedCard.id)}
+          totalCards={cards.length}
           onToggleOwned={handleToggleOwned}
           onToggleFavorite={handleToggleFavorite}
           onClose={() => setInspectedCard(null)}

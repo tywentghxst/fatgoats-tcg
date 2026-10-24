@@ -27,6 +27,7 @@ interface CardDetailModalProps {
   cardBackUrl: string;
   isOwned: boolean;
   isFavorite: boolean;
+  totalCards?: number;
   onToggleOwned: (id: string) => void;
   onToggleFavorite: (id: string) => void;
   onClose: () => void;
@@ -39,6 +40,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   cardBackUrl,
   isOwned,
   isFavorite,
+  totalCards,
   onToggleOwned,
   onToggleFavorite,
   onClose,
@@ -240,7 +242,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                   <span>Prev</span>
                 </button>
                 <span className="text-[11px] font-mono text-cyan-400 font-bold bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">
-                  #{card.cardNumber} of 36
+                  #{card.cardNumber}{totalCards ? ` of ${totalCards}` : ''}
                 </span>
                 <button
                   onClick={onNextCard}

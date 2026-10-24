@@ -6,15 +6,14 @@ export interface NewArrivalsDrop {
 }
 
 export const LATEST_DROP: NewArrivalsDrop = {
-  dropId: "drop-202610220845",
-  dropDate: "2026-10-22",
-  dropTitle: "Celestial New Arrivals",
+  dropId: "drop-202610232230",
+  dropDate: "2026-10-23",
+  dropTitle: "Party Chronicles & Stealth Chill",
   cardIds: [
-  "fg-37",
-  "fg-38",
-  "fg-39",
-  "fg-40",
-  "fg-41",
-  "fg-42"
-],
+    "fg-43",
+    "fg-44",
+    "fg-45",
+    "fg-46",
+    "fg-47"
+  ],
 };

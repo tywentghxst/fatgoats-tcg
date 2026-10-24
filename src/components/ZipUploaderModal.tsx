@@ -103,7 +103,7 @@ export const ZipUploaderModal: React.FC<ZipUploaderModalProps> = ({
             Load Custom <span className="text-cyan-400">Card Pack Archive</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-            Note: All <strong className="text-cyan-300">36 FatGoats cards</strong> and the <strong className="text-amber-300">Celestial Goat Card Back</strong> from your 57MB zip are already loaded and ready in the gallery! You can also drop any new zip or expansion file here anytime without size limits.
+            Note: All <strong className="text-cyan-300">FatGoats collection cards</strong> and the <strong className="text-amber-300">Celestial Goat Card Back</strong> are pre-loaded and ready in the gallery! You can also drop any new zip or expansion file here anytime without size limits.
           </p>
         </div>
 

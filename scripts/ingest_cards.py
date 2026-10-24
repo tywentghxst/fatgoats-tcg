@@ -285,9 +285,8 @@ def update_cards_data(new_cards):
     print(f"  [OK] Successfully registered {len(cards_to_add)} cards in cardsData.ts")
 
 def update_quests_data(new_quests):
-    """Appends new quest items to src/data/questsData.ts."""
+    """Appends new quest items to src/data/questsData.ts if quests system is enabled."""
     if not QUESTS_DATA_FILE.exists():
-        print(f"Error: {QUESTS_DATA_FILE} not found!")
         return
 
     content = QUESTS_DATA_FILE.read_text(encoding="utf-8")
