@@ -40,6 +40,8 @@ export interface CardItem {
 
 export type SortOption = 'number-asc' | 'number-desc' | 'name-asc' | 'name-desc' | 'rarity-desc' | 'power-desc';
 
+export type ViewMode = 'grid' | 'binder' | 'compact';
+
 export interface FilterState {
   search: string;
   rarity: string;

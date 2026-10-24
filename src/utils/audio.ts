@@ -149,6 +149,152 @@ class SoundSystem {
     }
   }
 
+  // Haptic feedback for mobile
+  public vibrate(pattern: number | number[] = 20) {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(pattern);
+      } catch {
+        // unsupported or permissions error
+      }
+    }
+  }
+
+  // Realistic Foil Pack Tear Sound
+  public playFoilRip() {
+    if (!this.enabled) return;
+    this.initCtx();
+    if (!this.ctx) return;
+    this.vibrate([25, 40, 60]);
+
+    try {
+      const t = this.ctx.currentTime;
+      // White noise with crunch
+      const bufferSize = this.ctx.sampleRate * 0.35;
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        // Crackly noise
+        const decay = Math.exp(-i / (bufferSize * 0.4));
+        const crunch = Math.random() > 0.4 ? (Math.random() * 2 - 1) : 0;
+        data[i] = crunch * decay;
+      }
+
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(1200, t);
+      filter.frequency.exponentialRampToValueAtTime(400, t + 0.35);
+
+      const gain = this.ctx.createGain();
+      gain.gain.setValueAtTime(0.4, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+      noise.start(t);
+    } catch {
+      // AudioContext fallback
+    }
+  }
+
+  // Card slide / deal sound
+  public playCardSlide() {
+    if (!this.enabled) return;
+    this.initCtx();
+    if (!this.ctx) return;
+    this.vibrate(15);
+
+    try {
+      const t = this.ctx.currentTime;
+      const bufferSize = this.ctx.sampleRate * 0.08;
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+      }
+
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1800, t);
+      filter.frequency.exponentialRampToValueAtTime(900, t + 0.08);
+
+      const gain = this.ctx.createGain();
+      gain.gain.setValueAtTime(0.18, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+      noise.start(t);
+    } catch {
+      // AudioContext fallback
+    }
+  }
+
+  // Card Snap / Table Slap
+  public playCardSnap() {
+    if (!this.enabled) return;
+    this.initCtx();
+    if (!this.ctx) return;
+    this.vibrate(25);
+
+    try {
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, t);
+      osc.frequency.exponentialRampToValueAtTime(60, t + 0.09);
+
+      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.09);
+    } catch {
+      // AudioContext fallback
+    }
+  }
+
+  // Suspenseful rare card shimmer
+  public playRareGlow() {
+    if (!this.enabled) return;
+    this.initCtx();
+    if (!this.ctx) return;
+    this.vibrate([15, 30, 45]);
+
+    try {
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, t);
+      osc.frequency.linearRampToValueAtTime(1320, t + 0.4);
+
+      gain.gain.setValueAtTime(0.01, t);
+      gain.gain.linearRampToValueAtTime(0.15, t + 0.25);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.45);
+    } catch {
+      // AudioContext fallback
+    }
+  }
+
   // Pack Tear / Reveal Sound
   public playPackOpen() {
     if (!this.enabled) return;

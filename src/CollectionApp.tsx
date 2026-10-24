@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { INITIAL_CARDS, CARD_BACK_IMAGE } from './data/cardsData';
 import { LATEST_DROP } from './data/newArrivals';
-import { CardItem as CardItemType, CollectionStats, SortOption } from './types';
+import { CardItem as CardItemType, CollectionStats, SortOption, ViewMode } from './types';
 import { Navbar } from './components/Navbar';
 import { HeroStats } from './components/HeroStats';
 import { CardFilters } from './components/CardFilters';
 import { CardItem } from './components/CardItem';
+import { BinderView } from './components/BinderView';
 import { CardDetailModal } from './components/CardDetailModal';
 import { BoosterPackModal } from './components/BoosterPackModal';
 import { ZipUploaderModal } from './components/ZipUploaderModal';
@@ -62,7 +63,7 @@ export function App() {
   const [selectedCharacter, setSelectedCharacter] = useState('All');
   const [sortOption, setSortOption] = useState<SortOption>('number-asc');
   const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned' | 'unowned' | 'favorite' | 'new'>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'compact' | 'showcase'>('grid');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   // Modals
   const [inspectedCard, setInspectedCard] = useState<CardItemType | null>(null);
@@ -332,6 +333,7 @@ export function App() {
           onMarkAllOwned={handleMarkAllOwned}
           onResetOwned={handleResetOwned}
           onOpenNewReveal={() => setIsRevealOpen(true)}
+          onOpenBooster={() => setIsBoosterOpen(true)}
           newCardsCount={newCardsList.length}
         />
 
@@ -354,30 +356,41 @@ export function App() {
           onOpenMobileFilters={() => setIsMobileFilterOpen(true)}
         />
 
-        {/* Card Gallery Grid (2 Columns on mobile, up to 4 on desktop) */}
+        {/* Card Gallery: 9-Pocket Binder View OR Dynamic Card Grid */}
         <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
           {filteredCards.length > 0 ? (
-            <div
-              className={`grid ${
-                viewMode === 'compact'
-                  ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-4'
-                  : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-6'
-              }`}
-            >
-              {filteredCards.map((card) => (
-                <CardItem
-                  key={card.id}
-                  card={card}
-                  cardBackUrl={cardBackUrl}
-                  isOwned={ownedCardIds.has(card.id)}
-                  isFavorite={favoriteCardIds.has(card.id)}
-                  onToggleOwned={handleToggleOwned}
-                  onToggleFavorite={handleToggleFavorite}
-                  onInspect={(c) => setInspectedCard(c)}
-                  viewMode={viewMode}
-                />
-              ))}
-            </div>
+            viewMode === 'binder' ? (
+              <BinderView
+                cards={filteredCards}
+                ownedCardIds={ownedCardIds}
+                favoriteCardIds={favoriteCardIds}
+                onInspectCard={(c) => setInspectedCard(c)}
+                onToggleOwned={handleToggleOwned}
+                onToggleFavorite={handleToggleFavorite}
+              />
+            ) : (
+              <div
+                className={`grid ${
+                  viewMode === 'compact'
+                    ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-4'
+                    : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-6'
+                }`}
+              >
+                {filteredCards.map((card) => (
+                  <CardItem
+                    key={card.id}
+                    card={card}
+                    cardBackUrl={cardBackUrl}
+                    isOwned={ownedCardIds.has(card.id)}
+                    isFavorite={favoriteCardIds.has(card.id)}
+                    onToggleOwned={handleToggleOwned}
+                    onToggleFavorite={handleToggleFavorite}
+                    onInspect={(c) => setInspectedCard(c)}
+                    viewMode={viewMode}
+                  />
+                ))}
+              </div>
+            )
           ) : (
             /* Empty State */
             <div className="text-center py-16 px-4 rounded-2xl sm:rounded-3xl bg-slate-900/40 border border-slate-800/80 max-w-xl mx-auto my-8">

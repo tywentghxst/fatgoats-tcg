@@ -5,9 +5,10 @@ import {
   Grid3X3, 
   Sparkles, 
   X,
-  SlidersHorizontal
+  SlidersHorizontal,
+  BookOpen
 } from 'lucide-react';
-import { SortOption } from '../types';
+import { SortOption, ViewMode } from '../types';
 
 interface CardFiltersProps {
   selectedRarity: string;
@@ -18,8 +19,8 @@ interface CardFiltersProps {
   onSelectCharacter: (c: string) => void;
   sortOption: SortOption;
   onSelectSort: (s: SortOption) => void;
-  viewMode: 'grid' | 'compact' | 'showcase';
-  onSelectViewMode: (v: 'grid' | 'compact' | 'showcase') => void;
+  viewMode: ViewMode;
+  onSelectViewMode: (v: ViewMode) => void;
   characterList: string[];
   totalFilteredCount: number;
   totalCardsCount: number;
@@ -93,18 +94,29 @@ export const CardFilters: React.FC<CardFiltersProps> = ({
             title="Grid View (2 Cols)"
             className={`p-1.5 rounded-md transition-all ${
               viewMode === 'grid'
-                ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                ? 'bg-cyan-500 text-slate-950 shadow-sm font-bold'
                 : 'text-slate-400'
             }`}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
           </button>
           <button
+            onClick={() => onSelectViewMode('binder')}
+            title="9-Pocket Binder Book"
+            className={`p-1.5 rounded-md transition-all ${
+              viewMode === 'binder'
+                ? 'bg-amber-400 text-slate-950 shadow-sm font-bold'
+                : 'text-amber-400/80 hover:text-amber-300'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+          </button>
+          <button
             onClick={() => onSelectViewMode('compact')}
             title="Compact View (3 Cols)"
             className={`p-1.5 rounded-md transition-all ${
               viewMode === 'compact'
-                ? 'bg-cyan-500 text-slate-950 shadow-sm'
+                ? 'bg-cyan-500 text-slate-950 shadow-sm font-bold'
                 : 'text-slate-400'
             }`}
           >
@@ -216,28 +228,42 @@ export const CardFilters: React.FC<CardFiltersProps> = ({
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-slate-950/70 p-1 rounded-xl border border-slate-800">
+          <div className="flex items-center bg-slate-950/70 p-1 rounded-xl border border-slate-800 gap-0.5">
             <button
               onClick={() => onSelectViewMode('grid')}
               title="Standard 3D Grid"
-              className={`p-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 viewMode === 'grid'
                   ? 'bg-cyan-500 text-slate-950 shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
+              <span>Grid</span>
+            </button>
+            <button
+              onClick={() => onSelectViewMode('binder')}
+              title="9-Pocket Collector Binder Pages"
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                viewMode === 'binder'
+                  ? 'bg-amber-400 text-slate-950 shadow-sm shadow-amber-500/20'
+                  : 'text-amber-400/80 hover:text-amber-300'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Binder Book</span>
             </button>
             <button
               onClick={() => onSelectViewMode('compact')}
-              title="Compact Binder Sleeves"
-              className={`p-1.5 rounded-lg transition-all ${
+              title="Compact Vault Sleeves"
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 viewMode === 'compact'
                   ? 'bg-cyan-500 text-slate-950 shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
               <Grid3X3 className="w-4 h-4" />
+              <span>Compact</span>
             </button>
           </div>
 

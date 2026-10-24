@@ -176,7 +176,17 @@ export const CardItem: React.FC<CardItemProps> = ({
             }`}
           />
 
-          {/* Clean White Specular Glare (Zero weird colored hue) */}
+          {/* Holofoil Refraction Glare on Rare Cards */}
+          {(card.rarity === 'Legendary' || card.rarity === 'Secret Rare' || card.rarity === 'Mythic Rare') && isHovered && (
+            <motion.div
+              className="absolute inset-0 pointer-events-none tcg-holo-rainbow"
+              style={{
+                opacity: glareOpacity,
+              }}
+            />
+          )}
+
+          {/* Clean White Specular Glare */}
           {isHovered && (
             <motion.div
               className="absolute inset-0 pointer-events-none"
@@ -257,9 +267,14 @@ export const CardItem: React.FC<CardItemProps> = ({
               <span className={`text-[9px] sm:text-[10px] uppercase font-bold tracking-wider px-1.5 sm:px-2 py-0.2 sm:py-0.5 rounded ${currentRarity.bg} ${currentRarity.text} border border-white/10 truncate`}>
                 {card.rarity}
               </span>
-              <span className="text-[9px] sm:text-[10px] font-mono text-cyan-300 bg-cyan-950/60 px-1 sm:px-1.5 py-0.2 sm:py-0.5 rounded border border-cyan-800/40">
-                {card.element}
-              </span>
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="text-[9px] sm:text-[10px] font-mono text-cyan-300 bg-cyan-950/70 px-1.5 py-0.2 rounded border border-cyan-800/40">
+                  {card.element}
+                </span>
+                <span className="text-[9px] sm:text-[10px] font-mono font-bold text-amber-300 bg-amber-950/70 px-1 py-0.2 rounded border border-amber-800/40">
+                  ⚔{card.attack}
+                </span>
+              </div>
             </div>
             <h3 className="font-display font-bold text-xs sm:text-sm text-white truncate drop-shadow">
               {card.title}
