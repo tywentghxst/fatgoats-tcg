@@ -25,3 +25,8 @@ dist-ssr
 Thumbs.db
 *.tsbuildinfo
 NEW CARDS/_archived/
+
+build/
+var/
+playwright-report/
+test-results/
