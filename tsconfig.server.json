@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "build",
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/game/engine.ts", "src/data/cardsData.ts", "src/types.ts"]
+}

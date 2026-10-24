@@ -1,3 +1,21 @@
+# FatGoats TCG
+
+A playable original card battler built on the FatGoats collection. Solo bots, tag-team duels, private online rooms, deck building, and local tournament brackets.
+
+**Start here:** [setup, rules, supported features and remaining release work](docs/FATGOATS_TCG.md).
+
+```sh
+npm ci
+npm run build:all
+npm start
+```
+
+Requires Node 24. Open http://localhost:3000. Google cross-save requires server configuration; native app-store and Steam releases are not included.
+
+---
+
+## Original collection documentation
+
 # 🐐 FatGoats TCG — Celestial Goat Card Collection Web Application
 
 An ultra-modern, high-performance, and visually stunning Trading Card Game web application built with **React**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**.

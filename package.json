@@ -5,14 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/build-sw.mjs",
     "preview": "vite preview",
-    "ingest": "python scripts/ingest_cards.py"
+    "ingest": "python scripts/ingest_cards.py",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:all": "npm run build && npm run build:server",
+    "start": "node server/index.mjs",
+    "test": "npm run build:server && node --test tests/*.test.mjs",
+    "test:ui": "playwright test"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "framer-motion": "^12.43.0",
+    "google-auth-library": "^11.3.1",
     "jszip": "^3.10.1",
     "lucide-react": "^1.16.0",
     "react": "^19.0.0",
@@ -20,6 +26,7 @@
     "tailwind-merge": "^3.0.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.1",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.10",
